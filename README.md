@@ -1,5 +1,5 @@
 # ndotfiles
-<small>(noun) : the d being silent.</small>
+<small>(noun) : the d being silent.</small>  
 <small>(noun) : wait maybe it's the n.</small>
 
 
