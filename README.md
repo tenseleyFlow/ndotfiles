@@ -3,7 +3,7 @@
 <small>(noun) : wait maybe it's the n.</small>
 
 
-<large>IN</large> his CD "ORCHESTRAL EXCERPTS <em>for</em> TUBA: with spoken commentary", longtime Principal Tubist of the Chicago Symphony Orchestra Gene Pokorny introduces,
+<large>IN</large> his CD "ORCHESTRAL EXCERPTS <em>for</em> TUBA: with spoken commentary", longtime Principal Tubist of the Chicago Symphony Orchestra Gene Pokorny[^1] introduces,
 > IN his book the seven habits of highly effective people,  
 > author Stephen Covey points out many people climb the ladder of success,  
 > progressing higher and higher only to reach that top rung,  
@@ -17,7 +17,7 @@ IN <em>this</em> `README.md`, absurdist matthew forrester wolffe, asserts that,
 > whether you are interested in [frontend, backend, systems, or cyber],  
 > whether you are a professional, student, hobbyist, [or lobbyist],  
 > [compiles] down to one simple, definable entity.  
-> That entity is the <em>[sound and tactile feedback of your keyboard]</em>[^1].  
+> That entity is the <em>[sound and tactile feedback of your keyboard]</em>[^2].  
 > If you have chosen to [play the keyboard] without the most important reason being that you enjoy the sound [and feeling of the tactile feedback of your keyboard],  
 > then you may want to reevaluate while you’re playing the [keyboard] in the first place.  
 > ...Your ladder may be leaning against the wrong wall.  
@@ -26,6 +26,6 @@ IN <em>this</em> `README.md`, absurdist matthew forrester wolffe, asserts that,
 ## What?
 Just putting some of my dotfiles under VCS because some in my immediate area have asked.
 
-
-[^1]: sorry gosh, yeah no, it's your O(n[^2])dotfiles!
-[^2]: yeah i think it is the n that should be silent
+[^1]: y'all this guy tore me absolute-and-altogether-new-one in a very public masterclass (and filmed to boot. hope that never gets put up somewhere..), and you know what? **my 20-y/o self f\*ckin needed it.**
+[^2]: sorry gosh, yeah no, it's your O(n[^3])dotfiles!
+[^3]: yeah i think it is the n that should be silent
