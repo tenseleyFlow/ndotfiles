@@ -224,6 +224,7 @@ alt-8 = 'workspace 8'
 alt-9 = 'workspace 9'
 
 alt-a = 'workspace A'   # ::: Audacity
+alt-b = 'workspace B'   # ::: Firefox
 alt-d = 'workspace D'   # ::: Discord
 alt-g = 'workspace G'   # ::: Ghostty
 alt-m = 'workspace M'   # ::: Messages
@@ -251,7 +252,14 @@ alt-shift-7 = 'move-node-to-workspace 7 --focus-follows-window'
 alt-shift-8 = 'move-node-to-workspace 8 --focus-follows-window'
 alt-shift-9 = 'move-node-to-workspace 9 --focus-follows-window'
 
+alt-shift-d = 'move-node-to-workspace D --focus-follows-window'
+alt-shift-b = 'move-node-to-workspace B --focus-follows-window'
+alt-shift-g = 'move-node-to-workspace G --focus-follows-window'
+alt-shift-m = 'move-node-to-workspace M --focus-follows-window'
+alt-shift-s = 'move-node-to-workspace S --focus-follows-window'
 alt-shift-w = 'move-node-to-workspace W --focus-follows-window'
+alt-shift-z = 'move-node-to-workspace Z --focus-follows-window'
+
 
 # TODO: @espadonne better multimonitor
 #
@@ -262,7 +270,7 @@ ctrl-alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 ctrl-alt-z = 'exec-and-forget open -a /Applications/Zen.app'              # ::: wkspc Z
 ctrl-alt-s = 'exec-and-forget open -a /Applications/Slack.app'            # ::: wkspc S
 ctrl-alt-w = 'exec-and-forget open -a /Applications/WezTerm.app'          # ::: wkspc W
-ctrl-alt-f = 'exec-and-forget open -a /Applications/Firefox.app'          # ::: wkspc F
+ctrl-alt-b = 'exec-and-forget open -a /Applications/Firefox.app'          # ::: wkspc B
 ctrl-alt-g = 'exec-and-forget open -a /Applications/Ghostty.app'          # ::: wkspc G
 ctrl-alt-d = 'exec-and-forget open -a /Applications/Discord.app'          # ::: wkspc D
 ctrl-alt-a = 'exec-and-forget open -a /Applications/Audacity.app'         # ::: wkspc A
