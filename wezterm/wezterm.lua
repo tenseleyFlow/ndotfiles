@@ -29,14 +29,14 @@ end
 -- ::::: :::::::::::::::::::::: :::::
 
 -- <<TUNER-START>>
--- @ui: slider(min=10, max=42, step=1)
-config.font_size = 30
--- @ui: slider(min=0.05, max=1.0, step=0.01)
-config.window_background_opacity = 0.3
--- @ui: select(options="Gruvbox Dark, Gruvbox Light, Catppuccin Mocha")
-config.color_scheme = "Gruvbox Dark"
--- @ui: slider(min=1, max=100, step=1)
-config.macos_window_background_blur = 32
+-- @ui: slider(min=10, max=42, step=1) type=int
+config.font_size = 23
+-- @ui: slider(min=0.05, max=1.0, step=0.01) type=float
+config.window_background_opacity = 0.36
+-- @ui: select(options="Gruvbox Dark, Gruvbox Light, Catppuccin Mocha") type=string
+config.color_scheme = "Catppuccin Mocha"
+-- @ui: slider(min=1, max=100, step=1) type=int
+config.macos_window_background_blur = 22
 -- <<TUNER-END>>
 
 
