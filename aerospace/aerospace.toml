@@ -377,7 +377,7 @@ run = [
 if.app-name-regex-substring = '(?i)firefox'
 run = [
 	'layout tiling',
-	'move-node-to-workspace F',
+	'move-node-to-workspace B',
 ]
 
 [[on-window-detected]]
