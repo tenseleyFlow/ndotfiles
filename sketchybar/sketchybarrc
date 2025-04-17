@@ -1,0 +1,145 @@
+#!/bin/zsh
+# espadonne (mfw) v. minimal sketchybar config
+# 
+# has battery indicator w. 7 FA duotone icons
+# and color coding,
+# date/time + weekday
+# CPU%
+# aerospace summary
+# and main memory usage %
+#
+# NOTE: it's my most careless config
+#       but it doesn't make one think of liqui-
+#       -fied wasps, which is always good in my book.
+#       ie, this one is esp. helterskelter
+#
+
+PLUGDIR="/Users/matthewwolffe/.config/sketchybar/plugins"
+
+# :::
+# :::: 'GLOBALS' ::::
+# ::::: ::::::::: :::::
+# 
+sketchybar --load-font "/Users/matthewwolffe/Library/Fonts/Font Awesome 6 Pro-Thin-100.otf"
+sketchybar --load-font "/Users/matthewwolffe/Library/Fonts/Font Awesome 6 Pro-Light-300.otf"
+sketchybar --load-font "/Users/matthewwolffe/Library/Fonts/Font Awesome 6 Pro-Regular-400.otf"
+sketchybar --load-font "/Users/matthewwolffe/Library/Fonts/Font Awesome 6 Duotone-Thin-100.otf"
+sketchybar --load-font "/Users/matthewwolffe/Library/Fonts/Font Awesome 6 Duotone-Regular-100.otf"
+
+sketchybar \
+  --bar \
+    color=0xcc3B4252 \
+    blur_radius=20 \
+    display=all \
+    height=32 \
+    shadow=off \
+  --default \
+    icon.color=0xff98E6EB \
+    label.color=0xffFFFFFF \
+    icon.font="Font Awesome 6 Duotone:Thin:18" \
+
+# :::
+# :::: LEFT - TAKE IT BACK NOW Y'ALL ::::
+# ::::: ::::::::::::::::::::::::::::: :::::
+#
+
+# YYYY.MM.DD (DAY-NAME)
+sketchybar --add item clock left \
+  --set clock \
+  updates=on \
+  update_freq=10 \
+  label.padding_left=10 \
+  script="$PLUGDIR/clock.sh LEFT" \
+
+# separator
+sketchybar --add item filler0 left \
+    --set filler0 \
+        label.padding_right=10 \
+        label.padding_left=10 \
+        label="||" \
+
+# :::
+# :::: AEROSPACE SUMMARY ::::
+# ::::: ::::::::::::::::: :::::
+# 
+# see corresponding scripts for info
+sketchybar --add item wkspc_count left \
+    --set wkspc_count \
+        updates=on \
+        update_freq=2 \
+        icon=$'\ue3aa' \
+        icon.padding_left=10 \
+        icon.padding_right=10 \
+        label.padding_right=5 \
+        icon.color=0xff8AED9C \
+        script="$PLUGDIR/wkspc.sh count" \
+        icon.font="Font Awesome 6 Duotone:Regular:18" \
+
+sketchybar --add item filler1 left \
+    --set filler1 \
+        label.padding_right=5 \
+        label.padding_left=5 \
+        label="::" \
+
+sketchybar --add item wkspc_act left \
+    --set wkspc_act \
+        updates=on \
+        update_freq=2 \
+        label.padding_left=5 \
+        label.padding_right=5 \
+        script="$PLUGDIR/wkspc.sh focus" \
+
+sketchybar --add item wkspc_other left \
+    --set wkspc_other \
+        updates=on \
+        update_freq=2 \
+        label.padding_left=5 \
+        label.padding_right=5 \
+        script="$PLUGDIR/wkspc.sh others" \
+
+
+# :::
+# :::: SLIIIDE TO THE RIGHT ::::
+# ::::: :::::::::::::::::::: :::::
+# 
+
+# 24 hour time
+sketchybar --add item time right \
+  --set time \
+  updates=on \
+  update_freq=10 \
+  label.padding_right=10 \
+  script="$PLUGDIR/clock.sh" \
+  icon.color=0xffff7700 \
+
+# cpu usage
+sketchybar --add item cpu right \
+  --set cpu \
+    updates=on \
+    update_freq=5 \
+    icon=$'\uf2db' \
+    icon.padding_right=5 \
+    label.padding_right=10 \
+    script="$PLUGDIR/cpu.sh" \
+
+# system memory used (as
+# reported by memory_pressure command )
+sketchybar --add item mem right \
+  --set mem \
+    updates=on \
+    update_freq=5 \
+    icon=$'\uf70a' \
+    icon.padding_right=5 \
+    label.padding_right=10 \
+    script="$PLUGDIR/mem.sh" \
+
+# battery level
+sketchybar --add item batt right \
+    --set batt \
+        updates=on \
+        update_freq=60 \
+        script="$PLUGDIR/batt.sh" \
+        icon.padding_right=5 \
+        label.padding_right=10
+
+sketchybar --update
