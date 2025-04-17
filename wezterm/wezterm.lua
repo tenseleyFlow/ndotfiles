@@ -36,7 +36,9 @@ config.window_background_opacity = 0.36
 -- @ui: select(options="Gruvbox Dark, Gruvbox Light, Catppuccin Mocha") type=string
 config.color_scheme = "Catppuccin Mocha"
 -- @ui: slider(min=1, max=100, step=1) type=int
-config.macos_window_background_blur = 22
+config.macos_window_background_blur = 24
+-- @ui: numerical(min=0.5, max=5.5, step=0.01) type=float
+config.line_height = 1.06
 -- <<TUNER-END>>
 
 
