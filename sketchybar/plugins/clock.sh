@@ -9,7 +9,7 @@ label=""
 if [[ "$1" == "LEFT" ]]; then
     label="$(date '+%Y.%m.%d (%A)')"
 else
-    label="$(date '+%-H:%M')"
+    label="|| $(date '+%-H:%M')"
 fi
 
 sketchybar --set $NAME label="$label"
