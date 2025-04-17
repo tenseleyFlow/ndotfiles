@@ -9,6 +9,11 @@
 # TODO: @espadonne (mfw) toolbox/setting apps float away from taskbar?
 # TODO: @espadonne (mfw) utility mode to launch apple default apps
 # TODO: @espadonne (mfw) don't shadow unix keybinds you use
+# TODO: matt.
+#             matt.
+#                       matt.
+#       you 'fixed' that unix kb shadow with another unix kb. fix that.
+#
 #
 # ::: SEE: 
 # :::: COMMANDS : https://nikitabobko.github.io/AeroSpace/commands
@@ -112,7 +117,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 #				  See:
 # 				  https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-	outer.top =        12
+	outer.top =        6
 	outer.left =       12
 	outer.right =      12
 	outer.bottom =     12
