@@ -117,13 +117,21 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 #				  See:
 # 				  https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
-	outer.top =        6
-	outer.left =       12
-	outer.right =      12
-	outer.bottom =     12
-	inner.vertical =   6
-	inner.horizontal = 6
+outer.top    = [{ monitor.main         = 6 },
+                { monitor."LU28R55"     = 48 },
+                12]
+outer.left   = [{ monitor.main         = 12 },
+                { monitor."LU28R55"     = 12 },
+                12]
+outer.bottom = [{ monitor.main         = 12 },
+                { monitor."LU28R55"     = 12 },
+                12]
+outer.right  = [{ monitor.main         = 12 },
+                { monitor."LU28R55"     = 12 },
+                12]
 
+inner.horizontal = 6
+inner.vertical   = 6
 
 # :::
 # :::: MODES & MODE BINDINGS ::::
