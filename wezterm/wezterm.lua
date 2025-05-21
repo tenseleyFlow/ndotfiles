@@ -249,6 +249,18 @@ config.keys = {
     action = wezterm.action.TogglePaneZoomState,
   },
 
+  -- :::
+  -- getting my nice cmd readlines back
+  {
+    key = "LeftArrow",
+    mods = "CMD",
+    action = wezterm.action.SendString("\x1b[1;9D"),
+  },
+  {
+    key = "RightArrow",
+    mods = "CMD",
+    action = wezterm.action.SendString("\x1b[1;9C"),
+  },
 
   -- :::
   -- :::: VISUAL ::::
