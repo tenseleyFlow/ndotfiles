@@ -119,15 +119,19 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 [gaps]
 outer.top    = [{ monitor.main         = 6 },
                 { monitor."LU28R55"     = 48 },
+                { monitor."Odyssey*"     = 48 },
                 12]
 outer.left   = [{ monitor.main         = 12 },
                 { monitor."LU28R55"     = 12 },
+                { monitor."Odyssey*"     = 12 },
                 12]
 outer.bottom = [{ monitor.main         = 12 },
                 { monitor."LU28R55"     = 12 },
+                { monitor."Odyssey*"     = 12 },
                 12]
 outer.right  = [{ monitor.main         = 12 },
                 { monitor."LU28R55"     = 12 },
+                { monitor."Odyssey*"     = 12 },
                 12]
 
 inner.horizontal = 6
@@ -203,9 +207,9 @@ ctrl-alt-right = 'focus right'
 
 # ::: 
 # See: https://nikitabobko.github.io/AeroSpace/commands#move
+ctrl-alt-shift-up = 'move up'
 ctrl-alt-shift-left = 'move left'
 ctrl-alt-shift-down = 'move down'
-ctrl-alt-shift-up = 'move up'
 ctrl-alt-shift-right = 'move right'
 
 
@@ -232,19 +236,18 @@ alt-3 = 'workspace 3'
 alt-4 = 'workspace 4'
 alt-5 = 'workspace 5'
 alt-6 = 'workspace 6'
-alt-7 = 'workspace 7'
-alt-8 = 'workspace 8'
-alt-9 = 'workspace 9'
+# alt-7 = 'workspace 7'
+# alt-8 = 'workspace 8'
+# alt-9 = 'workspace 9'
 
 alt-a = 'workspace A'   # ::: Audacity
-alt-b = 'workspace B'   # ::: Firefox
-alt-d = 'workspace D'   # ::: Discord
+alt-i = 'workspace I'   # ::: Discord
 alt-g = 'workspace G'   # ::: Ghostty
 alt-m = 'workspace M'   # ::: Messages
 alt-s = 'workspace S'   # ::: Slack
-alt-t = 'workspace T'   # ::: Terminal
 alt-v = 'workspace V'   # ::: DaVinci
 alt-w = 'workspace W'   # ::: WezTerm
+alt-x = 'workspace X'   # ::: Firefox
 alt-z = 'workspace Z'   # ::: Zen
 
 # TODO: @espadonne  this is a unix 
@@ -261,15 +264,15 @@ alt-shift-3 = 'move-node-to-workspace 3 --focus-follows-window'
 alt-shift-4 = 'move-node-to-workspace 4 --focus-follows-window'
 alt-shift-5 = 'move-node-to-workspace 5 --focus-follows-window'
 alt-shift-6 = 'move-node-to-workspace 6 --focus-follows-window'
-alt-shift-7 = 'move-node-to-workspace 7 --focus-follows-window'
-alt-shift-8 = 'move-node-to-workspace 8 --focus-follows-window'
-alt-shift-9 = 'move-node-to-workspace 9 --focus-follows-window'
+# alt-shift-7 = 'move-node-to-workspace 7 --focus-follows-window'
+# alt-shift-8 = 'move-node-to-workspace 8 --focus-follows-window'
+# alt-shift-9 = 'move-node-to-workspace 9 --focus-follows-window'
 
-alt-shift-d = 'move-node-to-workspace D --focus-follows-window'
-alt-shift-b = 'move-node-to-workspace B --focus-follows-window'
+alt-shift-i = 'move-node-to-workspace I --focus-follows-window'
 alt-shift-g = 'move-node-to-workspace G --focus-follows-window'
 alt-shift-m = 'move-node-to-workspace M --focus-follows-window'
 alt-shift-s = 'move-node-to-workspace S --focus-follows-window'
+alt-shift-x = 'move-node-to-workspace X --focus-follows-window'
 alt-shift-w = 'move-node-to-workspace W --focus-follows-window'
 alt-shift-z = 'move-node-to-workspace Z --focus-follows-window'
 
@@ -283,9 +286,9 @@ ctrl-alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 ctrl-alt-z = 'exec-and-forget open -a /Applications/Zen.app'              # ::: wkspc Z
 ctrl-alt-s = 'exec-and-forget open -a /Applications/Slack.app'            # ::: wkspc S
 ctrl-alt-w = 'exec-and-forget open -a /Applications/WezTerm.app'          # ::: wkspc W
-ctrl-alt-b = 'exec-and-forget open -a /Applications/Firefox.app'          # ::: wkspc B
+ctrl-alt-x = 'exec-and-forget open -a /Applications/Firefox.app'          # ::: wkspc X
 ctrl-alt-g = 'exec-and-forget open -a /Applications/Ghostty.app'          # ::: wkspc G
-ctrl-alt-d = 'exec-and-forget open -a /Applications/Discord.app'          # ::: wkspc D
+ctrl-alt-i = 'exec-and-forget open -a /Applications/Discord.app'          # ::: wkspc I
 ctrl-alt-a = 'exec-and-forget open -a /Applications/Audacity.app'         # ::: wkspc A
 ctrl-alt-m = 'exec-and-forget open -a /System/Applications/Messages.app'  # ::: wkspc M
 
@@ -358,12 +361,12 @@ run = [
 # 	'move-node-to-workspace W',
 # ]
 
-[[on-window-detected]]
-if.app-name-regex-substring = '(?i)terminal'
-run = [
-	'layout tiling',
-	'move-node-to-workspace T'
-]
+# [[on-window-detected]]
+# if.app-name-regex-substring = '(?i)terminal'
+# run = [
+# 	'layout tiling',
+# 	'move-node-to-workspace T'
+# ]
 
 [[on-window-detected]]
 if.app-name-regex-substring = '(?i)discord'
@@ -393,12 +396,12 @@ run = [
 	'move-node-to-workspace B',
 ]
 
-[[on-window-detected]]
-if.app-name-regex-substring = '(?i)zen'
-run = [
-	'layout tiling',
-	'move-node-to-workspace Z',
-]
+# [[on-window-detected]]
+# if.app-name-regex-substring = '(?i)zen'
+# run = [
+# 	'layout tiling',
+# 	'move-node-to-workspace Z',
+# ]
 
 [[on-window-detected]]
 if.app-name-regex-substring = '(?i)davinci'
@@ -428,7 +431,6 @@ run = [
   v = ['exec-and-forget open -a Voice Memos', 'mode main']
 	s = ['exec-and-forget open -a /Applications/Safari.app', 'mode main']
   h = ['exec-and-forget open -a /Applications/ChatGPT.app', 'mode main']  
-
   # ::: 
   # yeah, y'all he bit the bullet,
   # but it kinda gets in the way from my
@@ -437,8 +439,6 @@ run = [
   # nless you read along with some care it's easy to miss the trenchfootgu
   # -n.
   p = ['exec-and-forget open -a /Applications/Bitwarden.app', 'mode main']
-
-  # y = []
 
   esc = 'mode main'
 	ctrl-esc = ['reload-config', 'mode main']
