@@ -66,3 +66,10 @@ alias mka="make all"
 alias mkr="make run"
 alias mkt="make test"
 alias mkc="make clean"
+
+# :::
+# :::: other ::::
+# ::::: ::::: :::::
+# 
+alias brewup="brew update && brew upgrade && brew cleanup"
+alias gfort="gfortran"

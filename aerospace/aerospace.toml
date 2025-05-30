@@ -63,6 +63,7 @@ accordion-padding = 18
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
 default-root-container-layout = 'tiles'
 
+#
 # :::
 # Possible values: 
 # Set to 'horizontal', 'vertical', or 'auto'
@@ -72,6 +73,7 @@ default-root-container-layout = 'tiles'
 # :::::               landscape viewport :: horizontal
 # :::::               anything else should follow this gist
 default-root-container-orientation = 'auto'
+
 
 # :::
 # Commentout to disable behavior, 
@@ -186,6 +188,19 @@ inner.vertical   = 6
 # ::::: :::::::::::::::: :::::
 # 
 alt-u = 'mode utility'
+
+
+# :::
+# :::: MONITOR BINDINGS ::::
+# ::::: :::::::::::::::: :::::
+# 
+
+ctrl-alt-1 = 'focus-monitor prev'
+ctrl-alt-2 = 'focus-monitor next'
+ctrl-alt-shift-1 = 'move-workspace-to-monitor prev'
+ctrl-alt-shift-2 = 'move-workspace-to-monitor next'
+ctrl-alt-shift-0 = 'move-workspace-to-monitor monitor.main' # broken
+
 
 # ::: 
 # Eh, pretty self-expl
