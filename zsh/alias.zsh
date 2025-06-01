@@ -71,5 +71,8 @@ alias mkc="make clean"
 # :::: other ::::
 # ::::: ::::: :::::
 # 
-alias brewup="brew update && brew upgrade && brew cleanup"
 alias gfort="gfortran"
+alias goclass="cd ${HOME}/Documents/Class/"
+alias goproj="cd ${HOME}/Documents/Project/"
+alias goorg="cd ${HOME}/Documents/GithubOrgs/"
+alias brewup="brew update && brew upgrade && brew cleanup"
