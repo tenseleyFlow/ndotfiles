@@ -389,7 +389,7 @@ run = [
 if.app-name-regex-substring = '(?i)discord'
 run = [
 	'layout tiling',
-	'move-node-to-workspace D',
+	'move-node-to-workspace I',
 ]
 
 [[on-window-detected]]
