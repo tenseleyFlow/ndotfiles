@@ -29,6 +29,8 @@ alias up="../ || cd ../"
 alias goclass="cd ${HOME}/Documents/Class/"
 alias goproj="cd ${HOME}/Documents/Project/"
 alias goorg="cd ${HOME}/Documents/GithubOrgs/"
+alias goterse="cd ${HOME}/Documents/GithubOrgs/tenselyflow"
+alias godot="cd ${HOME}/Documents/GithubOrgs/tenselyflow/ndotfiles"
 
 # :::
 # :::: python things ::::
@@ -72,7 +74,7 @@ alias mkc="make clean"
 # ::::: ::::: :::::
 # 
 alias gfort="gfortran"
-alias goclass="cd ${HOME}/Documents/Class/"
-alias goproj="cd ${HOME}/Documents/Project/"
-alias goorg="cd ${HOME}/Documents/GithubOrgs/"
 alias brewup="brew update && brew upgrade && brew cleanup"
+
+
+
