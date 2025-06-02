@@ -55,7 +55,7 @@ alias gas="git status"
 alias gall="git add --all"
 alias gcomm="git commit --message"
 alias gpull="git pull origin trunk"
-alias gporg="git push origin trunk"
+alias gputt="git push origin trunk"
 alias gcamm="git commit --all --message"
 alias glogg="git log --online --graph --decorate --all"
 
