@@ -14,6 +14,9 @@ alias zconfig="micro ${HOME}/.zshrc || ${EDITOR} ${HOME}/.zshrc"
 # :::: navigation ::::
 # ::::: :::::::::: :::::
 # 
+# NOTE: this actually only worked in fish
+#       but I've rewritten `up` as a shell function
+#       found in $ZSH_CUSTOM/function.zsh
 # NOTE: the short circuit wont work in bash
 #       and (may??) not ALWAYS work in zsh (or fish)
 #
@@ -25,7 +28,7 @@ alias zconfig="micro ${HOME}/.zshrc || ${EDITOR} ${HOME}/.zshrc"
 # which will correctly change dirs to ../../../
 #
 alias bk="- || cd -"
-alias up="../ || cd ../"
+# alias up="../ || cd ../"
 alias goclass="cd ${HOME}/Documents/Class/"
 alias goproj="cd ${HOME}/Documents/Project/"
 alias goorg="cd ${HOME}/Documents/GithubOrgs/"
