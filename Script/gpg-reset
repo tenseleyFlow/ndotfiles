@@ -1,0 +1,161 @@
+#!/bin/bash
+
+# gpg-reset - Reset GPG agent when it gets stuck
+# Usage: gpg-reset [options]
+
+set -e
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Default options
+VERBOSE=false
+TEST_AFTER=true
+
+# Help function
+show_help() {
+    cat << EOF
+GPG Agent Reset Script
+
+Usage: gpg-reset [OPTIONS]
+
+Reset the GPG agent when it gets stuck or fails to sign.
+
+OPTIONS:
+    -h, --help      Show this help message
+    -v, --verbose   Show verbose output
+    -q, --quiet     Don't test after reset
+    -t, --test      Test GPG after reset (default)
+
+EXAMPLES:
+    gpg-reset               # Basic reset with test
+    gpg-reset -v            # Verbose reset
+    gpg-reset -q            # Quiet reset (no test)
+
+EOF
+}
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        -v|--verbose)
+            VERBOSE=true
+            shift
+            ;;
+        -q|--quiet)
+            TEST_AFTER=false
+            shift
+            ;;
+        -t|--test)
+            TEST_AFTER=true
+            shift
+            ;;
+        *)
+            echo -e "${RED}Error: Unknown option $1${NC}"
+            echo "Use -h or --help for usage information"
+            exit 1
+            ;;
+    esac
+done
+
+# Verbose output function
+verbose() {
+    if [[ "$VERBOSE" == true ]]; then
+        echo -e "${BLUE}[VERBOSE]${NC} $1"
+    fi
+}
+
+# Main reset function
+reset_gpg_agent() {
+    echo -e "${YELLOW}🔄 Resetting GPG agent...${NC}"
+    
+    # Step 1: Kill existing GPG processes
+    verbose "Killing existing GPG processes..."
+    pkill -f gpg-agent 2>/dev/null || true
+    killall gpg-agent 2>/dev/null || true
+    
+    # Step 2: Clear environment variables
+    verbose "Clearing GPG environment variables..."
+    unset GPG_AGENT_INFO 2>/dev/null || true
+    
+    # Step 3: Set TTY
+    verbose "Setting GPG_TTY..."
+    export GPG_TTY=$(tty)
+    
+    # Step 4: Kill agent via gpgconf
+    verbose "Killing agent via gpgconf..."
+    gpgconf --kill gpg-agent 2>/dev/null || true
+    
+    # Step 5: Launch new agent
+    verbose "Launching new GPG agent..."
+    gpgconf --launch gpg-agent
+    
+    echo -e "${GREEN}✅ GPG agent reset complete${NC}"
+}
+
+# Test function
+test_gpg() {
+    echo -e "${YELLOW}🧪 Testing GPG functionality...${NC}"
+    
+    # Test if GPG agent is responding
+    if gpg-connect-agent /bye >/dev/null 2>&1; then
+        verbose "GPG agent is responding"
+    else
+        echo -e "${RED}❌ GPG agent not responding${NC}"
+        return 1
+    fi
+    
+    # Test basic GPG operation
+    if echo "test" | gpg --clearsign >/dev/null 2>&1; then
+        echo -e "${GREEN}✅ GPG is working correctly${NC}"
+        return 0
+    else
+        echo -e "${YELLOW}⚠️  GPG agent reset but signing may still have issues${NC}"
+        echo -e "${YELLOW}   Try running: export GPG_TTY=\$(tty)${NC}"
+        return 1
+    fi
+}
+
+# Check if GPG is installed
+check_gpg() {
+    if ! command -v gpg >/dev/null 2>&1; then
+        echo -e "${RED}❌ Error: GPG is not installed${NC}"
+        exit 1
+    fi
+    
+    if ! command -v gpgconf >/dev/null 2>&1; then
+        echo -e "${RED}❌ Error: gpgconf is not available${NC}"
+        exit 1
+    fi
+}
+
+# Main execution
+main() {
+    verbose "Starting GPG agent reset script"
+    
+    # Check prerequisites
+    check_gpg
+    
+    # Reset the agent
+    reset_gpg_agent
+    
+    # Test if requested
+    if [[ "$TEST_AFTER" == true ]]; then
+        echo ""
+        test_gpg
+    fi
+    
+    echo ""
+    echo -e "${GREEN}🎉 Done! Try your git commit again.${NC}"
+}
+
+# Run main function
+main "$@"
