@@ -80,7 +80,9 @@ default-root-container-orientation = 'auto'
 # and falls back to empty list, `[]`, See my todo #1
 # See: https://nikitabobko.github.io/AeroSpace/commands#move-mouse
 # See: https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
+on-focus-changed = ['move-mouse window-lazy-center']
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
 
 
 # :::
@@ -188,19 +190,10 @@ inner.vertical   = 6
 # ::::: :::::::::::::::: :::::
 # 
 alt-u = 'mode utility'
+alt-p = 'mode monitor'
 
 
-# :::
-# :::: MONITOR BINDINGS ::::
-# ::::: :::::::::::::::: :::::
-# 
-
-ctrl-alt-1 = 'focus-monitor prev'
-ctrl-alt-2 = 'focus-monitor next'
-ctrl-alt-shift-1 = 'move-workspace-to-monitor prev'
-ctrl-alt-shift-2 = 'move-workspace-to-monitor next'
-ctrl-alt-shift-0 = 'move-workspace-to-monitor monitor.main' # broken
-
+ctrl-alt-tab = 'workspace-back-and-forth'
 
 # ::: 
 # Eh, pretty self-expl
@@ -294,20 +287,23 @@ alt-shift-w = 'move-node-to-workspace W --focus-follows-window'
 alt-shift-z = 'move-node-to-workspace Z --focus-follows-window'
 
 
-# TODO: @espadonne better multimonitor
-#
-ctrl-alt-tab = 'workspace-back-and-forth'
-ctrl-alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
-
 # ctrl-alt-t = 'exec-and-forget ~/Script/termcheck.sh'
 ctrl-alt-z = 'exec-and-forget open -a /Applications/Zen.app'              # ::: wkspc Z
 ctrl-alt-s = 'exec-and-forget open -a /Applications/Slack.app'            # ::: wkspc S
-ctrl-alt-w = 'exec-and-forget open -a /Applications/WezTerm.app'          # ::: wkspc W
+ctrl-alt-w = ['exec-and-forget open -a WezTerm', 'mode main']             # ::: wkspc W
 ctrl-alt-x = 'exec-and-forget open -a /Applications/Firefox.app'          # ::: wkspc X
 ctrl-alt-g = 'exec-and-forget open -a /Applications/Ghostty.app'          # ::: wkspc G
 ctrl-alt-i = 'exec-and-forget open -a /Applications/Discord.app'          # ::: wkspc I
 ctrl-alt-a = 'exec-and-forget open -a /Applications/Audacity.app'         # ::: wkspc A
 ctrl-alt-m = 'exec-and-forget open -a /System/Applications/Messages.app'  # ::: wkspc M
+
+ctrl-alt-o = 'exec-and-forget open -a ticktick'
+
+# TODO: fixme
+ctrl-alt-shift-w = [
+  'exec-and-forget open -n -a WezTerm --args --title WezFloat',
+  'mode main'
+]
 
 # :::: NOTE: @espadonne broken
 # :::::     don't feel like searching 
@@ -351,11 +347,11 @@ ctrl-alt-m = 'exec-and-forget open -a /System/Applications/Messages.app'  # ::: 
   run = 'layout floating'
 
 [[on-window-detected]]
-  if.app-name-regex-substring = '(?i)^(passwords|preview|facetime|music)'
+  if.app-name-regex-substring = '(?i)^(passwords|preview|facetime|music|ticktick)'
   run = 'layout floating'
 
 [[on-window-detected]]
-  if.app-name-regex-substring = '(?i)^(reminders|siri|weather|books|clock|notes)'
+  if.app-name-regex-substring = '(?i)^(reminders|siri|weather|books|clock|notes|ghostty)'
   run = 'layout floating'
 
 
@@ -364,12 +360,12 @@ ctrl-alt-m = 'exec-and-forget open -a /System/Applications/Messages.app'  # ::: 
 # ::::: :::::::::::::::::::::: :::::
 # 
 
-[[on-window-detected]]
-if.app-name-regex-substring = '(?i)ghostty'
-run = [
-	'layout tiling',
-	'move-node-to-workspace G',
-]
+# [[on-window-detected]]
+# if.app-name-regex-substring = '(?i)ghostty'
+# run = [
+# 	'layout tiling',
+# 	'move-node-to-workspace G',
+# ]
 
 # [[on-window-detected]]
 # if.app-name-regex-substring = '(?i)wezterm'
@@ -427,6 +423,17 @@ run = [
 	'move-node-to-workspace V',
 ]
 
+# Float only if launched with title "WezFloat" (broken)
+[[on-window-detected]]
+if.window-title-regex-substring = 'WezFloat'
+run = 'layout floating'
+
+# Default tiling for other WezTerm windows (but the other thing is broken anyway)
+[[on-window-detected]]
+if.app-name-regex-substring = '(?i)wezterm'
+run = 'layout tiling'
+
+
 # :::
 # :::: APPLE APPS // UTILITY MODE ::::
 # ::::: :::::::::::::::::::::::::: :::::
@@ -468,3 +475,20 @@ run = [
   alt-shift-j = ['join-with down', 'mode main']
   alt-shift-h = ['join-with left', 'mode main']
   alt-shift-l = ['join-with right', 'mode main']
+
+
+[mode.monitor.binding]
+# :::
+# :::: MONITOR BINDINGS ::::
+# ::::: :::::::::::::::: :::::
+# 
+
+esc = 'mode main'
+
+left = 'focus-monitor prev --wrap-around'
+right = 'focus-monitor next --wrap-around'
+shift-left  = 'move-node-to-monitor prev --wrap-around --focus-follows-window'
+shift-right = 'move-node-to-monitor next --wrap-around --focus-follows-window'
+ctrl-alt-shift-left = 'move-workspace-to-monitor prev'
+ctrl-alt-shift-right = 'move-workspace-to-monitor next'
+ctrl-alt-shift-0 = 'move-workspace-to-monitor monitor.main' # broken
