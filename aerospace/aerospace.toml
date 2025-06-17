@@ -141,6 +141,10 @@ outer.right  = [{ monitor.main         = 12 },
 inner.horizontal = 6
 inner.vertical   = 6
 
+# Ensure Homebrew’s bins are in the PATH for all `exec-*` calls
+[exec.env-vars]
+PATH = "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:${PATH}"
+
 # :::
 # :::: MODES & MODE BINDINGS ::::
 # ::::: ::::::::::::::::::::: :::::
@@ -192,6 +196,11 @@ inner.vertical   = 6
 alt-a = 'mode apps'
 alt-u = 'mode utility'
 alt-p = 'mode monitor'
+
+
+cmd-enter = 'exec-and-forget wezterm start'
+cmd-shift-enter = 'exec-and-forget open -na Ghostty'
+
 
 ctrl-alt-tab = 'workspace-back-and-forth'
 
@@ -272,11 +281,11 @@ alt-shift-equal = 'resize smart +100'
 ctrl-alt-shift-minus = 'resize smart -150'
 ctrl-alt-shift-equal = 'resize smart +150'
 
-
-ctrl-alt-shift-m = [
-  "exec-and-forget alacritty -e bash -lc 'morkgui'",
-  "mode main"
-]
+# broken
+# ctrl-alt-shift-m = [
+#   "exec-and-forget alacritty -e bash -lc '/usr/local/bin/morkgui;'",
+#   "mode main"
+# ]
 
 # FIXME
 ctrl-alt-shift-w = [
