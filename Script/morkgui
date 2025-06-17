@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# If not running in a terminal, spawn a new WezTerm window to run this script
+if [ -z "$TERM" ] || [[ "$TERM" == "dumb" ]]; then
+  exec wezterm start -- bash -lc "$0"
+fi
+# move_workspace_fzf.sh — choose source & target via fzf
+
+# grab all workspace names
+mapfile -t WKS < <(aerospace list-workspaces --all --format '%{workspace}')
+
+# interactive picks
+SRC=$(printf '%s\n' "${WKS[@]}" | fzf --prompt="Move from workspace: ")
+[ -z "$SRC" ] && exit 1
+
+DST=$(printf '%s\n' "${WKS[@]}" | fzf --prompt="Move to workspace: ")
+[ -z "$DST" ] && exit 1
+
+# collect and move
+mapfile -t WINS < <(aerospace list-windows --all --format '%{window-id},%{workspace}' | \
+                   awk -F',' -v WS="$SRC" '$2==WS {print $1}')
+for win in "${WINS[@]}"; do
+  aerospace move-node-to-workspace "$DST" --window-id "$win" --focus-follows-window
+done
+
+# finally, jump you over
+aerospace workspace "$DST"
