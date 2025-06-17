@@ -1,5 +1,3 @@
-# used by my alias manager, shtick
-
 [persistent.aliases]
 c = "clear"
 gad = "git add"
@@ -25,6 +23,12 @@ ss = "eval \"$(shtick source)\""
 trunk = "git checkout trunk"
 checkout = "git checkout"
 bcheck = "git checkout -b"
+gofort = "cd Documents/GithubOrgs/FortranGoingOnForty"
+pipup = "python -m pip install --upgrade pip"
+gadd = "git add"
+gaddall = "git add --all"
+GPUTT = "git push origin trunk"
+gosome = "cd ~/Documents/GithubOrgs/zeroed-some"
 
 [persistent.env_vars]
 PAGER = "less"
@@ -68,4 +72,3 @@ TOM = "JERRY"
 
 [personal.functions]
 note = "echo \"$(date): $*\" >> $HOME/notes.txt"
-
