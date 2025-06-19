@@ -281,17 +281,18 @@ alt-shift-equal = 'resize smart +100'
 ctrl-alt-shift-minus = 'resize smart -150'
 ctrl-alt-shift-equal = 'resize smart +150'
 
-# broken
-# ctrl-alt-shift-m = [
-#   "exec-and-forget alacritty -e bash -lc '/usr/local/bin/morkgui;'",
-#   "mode main"
-# ]
+
+# Launch morkgui via macOS Terminal for dynamic workspace moving, then bring Terminal to front
+ctrl-alt-shift-m = [
+  "exec-and-forget osascript -e 'tell application \"Terminal\" to do script \"/usr/local/bin/morkgui; exit\"' -e 'tell application \"Terminal\" to activate'",
+  "mode main"
+]
 
 # FIXME
-ctrl-alt-shift-w = [
-  'exec-and-forget open -n -a WezTerm --args --title WezFloat',
-  'mode main'
-]
+# ctrl-alt-shift-w = [
+#   'exec-and-forget open -n -a WezTerm --args --title WezFloat',
+#   'mode main'
+# ]
 
 # :::: NOTE: @espadonne broken
 # :::::     don't feel like searching 
@@ -342,6 +343,9 @@ ctrl-alt-shift-w = [
   if.app-name-regex-substring = '(?i)^(reminders|siri|weather|books|clock|notes|ghostty|terminal|alacritty)'
   run = 'layout floating'
 
+[[on-window-detected]]
+if.window-title-regex-substring = '(?i)wulftp'
+run = 'layout floating'
 
 # :::
 # :::: DEDICATED WORKSPINDOWS ::::
