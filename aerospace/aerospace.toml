@@ -124,18 +124,22 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 outer.top    = [{ monitor.main         = 6 },
                 { monitor."LU28R55"     = 48 },
                 { monitor."Odyssey*"     = 48 },
+                { monitor."HP*" = 48 },
                 12]
 outer.left   = [{ monitor.main         = 12 },
                 { monitor."LU28R55"     = 12 },
                 { monitor."Odyssey*"     = 12 },
+                { monitor."HP*" = 12 },
                 12]
 outer.bottom = [{ monitor.main         = 12 },
                 { monitor."LU28R55"     = 12 },
                 { monitor."Odyssey*"     = 12 },
+                { monitor."HP*" = 12 },
                 12]
 outer.right  = [{ monitor.main         = 12 },
                 { monitor."LU28R55"     = 12 },
                 { monitor."Odyssey*"     = 12 },
+                { monitor."HP*" = 12 },
                 12]
 
 inner.horizontal = 6
