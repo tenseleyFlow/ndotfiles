@@ -29,6 +29,7 @@ gadd = "git add"
 gaddall = "git add --all"
 GPUTT = "git push origin trunk"
 gosome = "cd ~/Documents/GithubOrgs/zeroed-some"
+gs = "git status"
 
 [persistent.env_vars]
 PAGER = "less"
