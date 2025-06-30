@@ -1,3 +1,4 @@
+[persistent]
 [persistent.aliases]
 c = "clear"
 gad = "git add"
@@ -30,17 +31,14 @@ gaddall = "git add --all"
 GPUTT = "git push origin trunk"
 gosome = "cd ~/Documents/GithubOrgs/zeroed-some"
 gs = "git status"
+bob = "slob"
+blorb = "echo gyorb"
 
 [persistent.env_vars]
-PAGER = "less"
-EDITOR = "micro"
-BROWSER = "firefox"
-HISTSIZE = "10000"
 
 [persistent.functions]
-mkcd = "mkdir -p \"$1\" && cd \"$1\""
-backup = "cp \"$1\" \"$1.backup.$(date +%Y%m%d_%H%M%S)\""
 
+[dev]
 [dev.aliases]
 mk = "make"
 mka = "make all"
@@ -59,17 +57,15 @@ pyserve = "python3 -m http.server 8000"
 brewup = "brew update && brew upgrade && brew cleanup"
 
 [dev.env_vars]
-JOM = "terry"
 
 [dev.functions]
-newproject = "mkdir -p \"$HOME/projects/$1\" && cd \"$HOME/projects/$1\" && git init"
 
+[personal]
 [personal.aliases]
 myip = "curl ifconfig.me"
 go = "cd /"
 
 [personal.env_vars]
-TOM = "JERRY"
 
 [personal.functions]
-note = "echo \"$(date): $*\" >> $HOME/notes.txt"
+
