@@ -1,0 +1,60 @@
+#!/bin/bash
+# wulftp-user - Manage wulftp backup users
+
+set -e
+
+ACTION=$1
+USERNAME=$2
+
+create_user() {
+    if id "$USERNAME" &>/dev/null; then
+        echo "User $USERNAME already exists"
+        exit 1
+    fi
+
+    # Create user
+    useradd -m -d /home/$USERNAME -s /usr/sbin/nologin -G backup $USERNAME
+
+    # Create backup directories
+    mkdir -p /srv/backups/$USERNAME/{devices,shared}
+    chown root:root /srv/backups/$USERNAME
+    chmod 755 /srv/backups/$USERNAME
+
+    chown $USERNAME:backup /srv/backups/$USERNAME/{devices,shared}
+    chmod 750 /srv/backups/$USERNAME/{devices,shared}
+
+    # Setup SSH key
+    mkdir -p /home/$USERNAME/.ssh
+    touch /home/$USERNAME/.ssh/authorized_keys
+    chown -R $USERNAME:$USERNAME /home/$USERNAME/.ssh
+    chmod 700 /home/$USERNAME/.ssh
+    chmod 600 /home/$USERNAME/.ssh/authorized_keys
+
+    echo "User $USERNAME created. Add their SSH public key to:"
+    echo "/home/$USERNAME/.ssh/authorized_keys"
+}
+
+delete_user() {
+    read -p "Delete user $USERNAME and all their backups? [y/N] " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        userdel $USERNAME
+        rm -rf /home/$USERNAME
+        # Keep backups by default, uncomment to delete:
+        # rm -rf /srv/backups/$USERNAME
+        echo "User $USERNAME deleted (backups preserved)"
+    fi
+}
+
+case $ACTION in
+    create)
+        create_user
+        ;;
+    delete)
+        delete_user
+        ;;
+    *)
+        echo "Usage: $0 {create|delete} username"
+        exit 1
+        ;;
+esac
