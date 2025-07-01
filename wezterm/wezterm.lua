@@ -193,6 +193,31 @@ config.keys = {
   -- ::::: :::::::::::: :::::
   -- 
 
+  -- better resize, keep mode though
+  {
+    key="UpArrow",
+    mods = "CMD|CTRL",
+    action = wezterm.action.AdjustPaneSize{"Up", 2} 
+  },
+
+  {
+    key="LeftArrow",
+    mods = "CMD|CTRL",
+    action = wezterm.action.AdjustPaneSize{"Left", 2} 
+  },
+
+  {
+    key="RightArrow",
+    mods = "CMD|CTRL",
+    action = wezterm.action.AdjustPaneSize{"Right", 2} 
+  },
+
+  {
+    key="DownArrow",
+    mods = "CMD|CTRL",
+    action = wezterm.action.AdjustPaneSize{"Down", 2} 
+  },
+
   -- creation/deltion
   {
     key = "X",
