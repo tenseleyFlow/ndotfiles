@@ -121,6 +121,14 @@ sketchybar --add item batt right \
         icon.padding_right=5 \
         label.padding_right=10
 
+# wifi status
+sketchybar --add item wifi right \
+           --set wifi \
+                update_freq=5 \
+                script="$PLUGDIR/wifi.sh" \
+                icon.padding_right=5 \
+                label.padding_right=10
+
 # cpu usage
 sketchybar --add item cpu right \
   --set cpu \
@@ -142,11 +150,31 @@ sketchybar --add item mem right \
     label.padding_right=10 \
     script="$PLUGDIR/mem.sh" \
 
-sketchybar --add item wifi right \
-           --set wifi \
-                update_freq=5 \
-                script="$PLUGDIR/wifi.sh" \
-                icon.padding_right=5 \
-                label.padding_right=10
+# separator
+sketchybar --add item filler2 right \
+    --set filler2 \
+        label.padding_right=15 \
+        label="||" \
+
+# tailscale popup menu
+sketchybar --add item ssh_menu right \
+    --set ssh_menu \
+        update_freq=60 \
+        script="$PLUGDIR/ssh-quick-connect.sh" \
+        icon=$'\uf489' \
+        icon.padding_right=5 \
+        label.padding_right=10 \
+    --subscribe ssh_menu mouse.clicked
+
+# server statistics
+# (load average and memory usage)
+# over SSH
+sketchybar --add item srv_right right \
+    --set srv_right \
+        update_freq=30 \
+        script="$PLUGDIR/server-stats.sh StarchNet" \
+        icon=$'\uf1c0' \
+        icon.padding_right=5 \
+        label.padding_right=10
 
 sketchybar --update
