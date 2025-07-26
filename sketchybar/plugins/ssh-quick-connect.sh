@@ -22,12 +22,22 @@
 ITEM_NAME="${NAME:-ssh_menu}"   # When run by SketchyBar, $NAME is set.
 SENDER="${SENDER:-routine}"     # "routine" when run via update_freq
 
+# Resolve Tailscale CLI path explicitly because SketchyBar's PATH may be minimal
+if command -v tailscale &>/dev/null; then
+  TS_BIN="$(command -v tailscale)"
+elif [[ -x "/Applications/Tailscale.app/Contents/MacOS/Tailscale" ]]; then
+  TS_BIN="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
+else
+  TS_BIN=""
+fi
+
 OPEN_CMD='osascript -e "tell application \"iTerm2\" to create window with default profile command \"%s\""'   # change to Terminal as desired
 
 # ---------- Helpers --------------------------------------------------
 
 json_status() {
-  tailscale status --json 2>/dev/null
+  [[ -z "$TS_BIN" ]] && return
+  "$TS_BIN" status --json 2>/dev/null
 }
 
 online_hosts() {
@@ -50,29 +60,37 @@ if [[ "$SENDER" == "routine" ]]; then
   LABEL="$ONLINE/$TOTAL"
 
   sketchybar --set "$ITEM_NAME" icon="$ICON" label="$LABEL"
-  # Toggle popup visibility so the newly‑created list appears
-  sketchybar --set "$ITEM_NAME" popup.drawing=toggle
   exit 0
 fi
 
 # ---------- Click handler -------------------------------------------
 
 if [[ "$SENDER" == "mouse.clicked" ]]; then
-  # Clear any previous popup items
-  sketchybar --remove popup."$ITEM_NAME" 2>/dev/null
+  # ----- 1. nuke children using sketchybar --query  ----------------
+  CHILDREN=($(sketchybar --query "$ITEM_NAME" | jq -r '.popup.items[]?'))
+  for C in "${CHILDREN[@]}"; do
+    sketchybar --remove "$C"
+  done
 
+  # ----- 2. rebuild list  ----------------
   TS_JSON=$(json_status)
   HOSTS=($(online_hosts "$TS_JSON"))
-  (( ${#HOSTS} == 0 )) && exit 0
 
-  # Build popup items dynamically
-  INDEX=0
-  for HOST in "${HOSTS[@]}"; do
-    POP="ssh_pop_${INDEX}"
-    sketchybar --add item "$POP" popup."$ITEM_NAME" \
-               --set "$POP" label="$HOST" icon="" \
-                    click_script=${(qq)${(e)${(printf "$OPEN_CMD" "ssh $HOST")}}}
-    (( INDEX++ ))
-  done
+  if (( ${#HOSTS} == 0 )); then
+    sketchybar --add item ssh_nopeers popup."$ITEM_NAME" \
+               --set ssh_nopeers label="No peers online" icon=""
+  else
+    INDEX=0
+    for HOST in "${HOSTS[@]}"; do
+      POP="ssh_pop_$INDEX"
+      sketchybar --add item "$POP" popup."$ITEM_NAME" \
+                 --set "$POP" label="$HOST" icon="" \
+                      click_script="open -a iTerm \"ssh $HOST\""
+      (( INDEX++ ))
+    done
+  fi
+
+  # ----- 3. show popup (always flips state)  ----------------
+  sketchybar --toggle "$ITEM_NAME" popup
   exit 0
 fi
