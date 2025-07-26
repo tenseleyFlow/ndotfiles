@@ -112,6 +112,15 @@ sketchybar --add item time right \
   script="$PLUGDIR/clock.sh" \
   icon.color=0xffff7700 \
 
+# battery level
+sketchybar --add item batt right \
+    --set batt \
+        updates=on \
+        update_freq=60 \
+        script="$PLUGDIR/batt.sh" \
+        icon.padding_right=5 \
+        label.padding_right=10
+
 # cpu usage
 sketchybar --add item cpu right \
   --set cpu \
@@ -132,15 +141,6 @@ sketchybar --add item mem right \
     icon.padding_right=5 \
     label.padding_right=10 \
     script="$PLUGDIR/mem.sh" \
-
-# battery level
-sketchybar --add item batt right \
-    --set batt \
-        updates=on \
-        update_freq=60 \
-        script="$PLUGDIR/batt.sh" \
-        icon.padding_right=5 \
-        label.padding_right=10
 
 sketchybar --add item wifi right \
            --set wifi \

@@ -38,7 +38,7 @@ ICON=$(get_wifi_icon "$RSSI")
 
 # Update sketchybar
 if [[ "$WIFI_STATE" == "On" ]]; then
-    sketchybar --set wifi icon="$ICON" label="${RSSI} dBm"
+    sketchybar --set wifi icon="$ICON" label="${RSSI}dBm"
 else
     sketchybar --set wifi icon="󰤮" label="Not Connected"
 fi
