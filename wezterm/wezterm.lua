@@ -30,31 +30,105 @@ end
 
 -- <<TUNER-START>>
 -- @ui: slider(min=10, max=42, step=1) type=int
-config.font_size = 17
--- @ui: slider(min=0.05, max=1.0, step=0.01) type=float
-config.window_background_opacity = 0.05
--- @ui: select(options="Aurora, Arthur, BirdsOfParadise, Bamboo, Ciapre, desert, Django, duskfox, Earthsong, Ef-Melissa-Dark, Elemental") type=string
-config.color_scheme = "Django"
--- @ui: slider(min=1, max=100, step=1) type=int
-config.macos_window_background_blur = 15
+config.font_size = 18
+
+-- @ui: select(options="Birds of Paradise,Gotham (terminal.sexy),Grape,Grass,Hardcore (base16),hardhacker,Harmonic16 Dark (base16),Harper (Gogh),HaX0R_BLUE,Heetch Dark (base16),Hemisu Dark (Gogh),Highway,Highway (Gogh),Hivacruz,Hopscotch,Hybrid (Gogh),Ibm 3270 (High Contrast) (Gogh),Ic Orange Ppl (Gogh),IC_Orange_PPL,Ivory Dark (terminal.sexy),Jackie Brown,Japanesque,JetBrains Darcula,jmbi (terminal.sexy)") type=string
+config.color_scheme = "jmbi (terminal.sexy)"
+
+-- @ui: select(options="JetBrains Mono, Fira Code, Cascadia Code, Source Code Pro, Hack, Consolas, Monaco, Menlo, DejaVu Sans Mono, Ubuntu Mono, Roboto Mono, IBM Plex Mono, Inconsolata") type=string
+config.font = wezterm.font("JetBrains Mono")
+
 -- @ui: numerical(min=0.5, max=5.5, step=0.01) type=float
-config.line_height = 1.06
--- <<TUNER-END>>
+config.line_height = 1.29
 
+-- @ui: numerical(min=0.5, max=2.0, step=0.1) type=float
+config.cell_width = 1.0
 
--- :::
--- :::: TO ADD HANDLING FOR :: later ::::
--- ::::: :::::::::::::::::::::::::::: :::::
--- 
-config.debug_key_events = false
-config.enable_scroll_bar = true
+-- @ui: slider(min=0.05, max=1.0, step=0.01) type=float
+config.window_background_opacity = 1.0
+
+-- @ui: slider(min=1, max=100, step=1) type=int
+config.macos_window_background_blur = 100
+
+-- @ui: color_picker(format="hex", alpha=false) type=color
 config.colors = config.colors or {}
 config.colors.background = "#333333"
-config.window_decorations = "RESIZE"
-config.pane_focus_follows_mouse = false
-config.native_macos_fullscreen_mode = true
+
+-- @ui: color_picker(format="hex", alpha=false) type=color
+config.colors = config.colors or {}
+config.colors.tab_bar = config.colors.tab_bar or {}
+config.colors.tab_bar.background = "#333333"
+
+-- @ui: color_picker(format="hex", alpha=false) type=color
+config.colors = config.colors or {}
+config.colors.tab_bar = config.colors.tab_bar or {}
+config.colors.tab_bar.active_tab = config.colors.tab_bar.active_tab or {}
+config.colors.tab_bar.active_tab.bg_color = "#444444"
+
+-- @ui: color_picker(format="hex", alpha=false) type=color
+config.colors = config.colors or {}
+config.colors.tab_bar = config.colors.tab_bar or {}
+config.colors.tab_bar.active_tab = config.colors.tab_bar.active_tab or {}
+config.colors.tab_bar.active_tab.fg_color = "#ffffff"
+
+-- @ui: color_picker(format="hex", alpha=false) type=color
+config.colors = config.colors or {}
+config.colors.tab_bar = config.colors.tab_bar or {}
+config.colors.tab_bar.inactive_tab = config.colors.tab_bar.inactive_tab or {}
+config.colors.tab_bar.inactive_tab.bg_color = "#333333"
+
+-- @ui: color_picker(format="hex", alpha=false) type=color
+config.colors = config.colors or {}
+config.colors.tab_bar = config.colors.tab_bar or {}
+config.colors.tab_bar.inactive_tab = config.colors.tab_bar.inactive_tab or {}
+config.colors.tab_bar.inactive_tab.fg_color = "#888888"
+
+-- @ui: slider(min=0, max=2000, step=100) type=int
+config.cursor_blink_rate = 500
+
+-- @ui: select(options="true, false") type=string
 config.hide_tab_bar_if_only_one_tab = true
-config.font = wezterm.font("JetBrains Mono")
+
+-- @ui: select(options="NONE, RESIZE, TITLE, RESIZE|TITLE") type=string
+config.window_decorations = "RESIZE|TITLE"
+
+-- @ui: select(options="true, false") type=string
+config.pane_focus_follows_mouse = false
+
+-- @ui: select(options="true, false") type=string
+config.native_macos_fullscreen_mode = true
+
+-- @ui: numerical(min=100, max=10000, step=100) type=int
+config.scrollback_lines = 3500
+
+-- @ui: select(options="true, false") type=string
+config.enable_scroll_bar = true
+
+-- @ui: slider(min=1, max=60, step=1) type=int
+config.animation_fps = 60
+
+-- @ui: slider(min=1, max=120, step=1) type=int
+config.max_fps = 60
+
+-- @ui: select(options="true, false") type=string
+config.tab_bar_at_bottom = false
+
+-- @ui: numerical(min=50, max=500, step=10) type=int
+config.tab_max_width = 200
+
+-- @ui: select(options="SystemBeep, Disabled") type=string
+config.audible_bell = "SystemBeep"
+
+-- @ui: select(options="true, false") type=string
+config.hide_mouse_cursor_when_typing = true
+
+-- @ui: select(options="true, false") type=string
+config.swallow_mouse_click_on_window_focus = false
+
+-- @ui: select(options="true, false") type=string
+config.debug_key_events = false
+
+-- <<TUNER-END>>
 
 
 -- :::
@@ -313,33 +387,24 @@ config.keys = {
 
 
 -- :::
--- :::: TAB BAR SETTINGS ::::
--- ::::: :::::::::::::::: :::::
+-- :::: TAB BAR HOVER STATES ::::
+-- ::::: ::::::::::::::::::::: :::::
 --
--- NOTE:  really just colors rn;
---        the live timestamp is scripted.
-config.colors.tab_bar = {
-  background = "#333333",
-  active_tab = {
-    bg_color = "#333333",
-    fg_color = "#FFFFFF",
-  },
-  inactive_tab = {
-    bg_color = "#333333",
-    fg_color = "#777777",
-  },
-  inactive_tab_hover = {
-    bg_color = "#444444",
-    fg_color = "#DDDDDD",
-  },
-  new_tab = {
-    bg_color = "#333333",
-    fg_color = "#FFFFFF",
-  },
-  new_tab_hover = {
-    bg_color = "#444444",
-    fg_color = "#FFFFFF",
-  },
+-- NOTE: These can't be easily tuned via GUI
+--       since they're computed from other values
+config.colors.tab_bar.inactive_tab_hover = {
+  bg_color = "#444444",
+  fg_color = "#DDDDDD",
+}
+
+config.colors.tab_bar.new_tab = {
+  bg_color = "#333333",
+  fg_color = "#FFFFFF",
+}
+
+config.colors.tab_bar.new_tab_hover = {
+  bg_color = "#444444",
+  fg_color = "#FFFFFF",
 }
 
 return config
