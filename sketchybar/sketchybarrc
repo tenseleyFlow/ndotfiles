@@ -142,4 +142,11 @@ sketchybar --add item batt right \
         icon.padding_right=5 \
         label.padding_right=10
 
+sketchybar --add item wifi right \
+           --set wifi \
+                update_freq=5 \
+                script="$PLUGDIR/wifi.sh" \
+                icon.padding_right=5 \
+                label.padding_right=10
+
 sketchybar --update
