@@ -31,7 +31,7 @@ else
   TS_BIN=""
 fi
 
-OPEN_CMD='osascript -e "tell application \"iTerm2\" to create window with default profile command \"%s\""'   # change to Terminal as desired
+OPEN_CMD='osascript -e "tell application \"iTerm2\" to create window with default profile command \"%s\""'
 
 # ---------- Helpers --------------------------------------------------
 
