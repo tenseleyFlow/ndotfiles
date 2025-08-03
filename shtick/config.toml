@@ -42,6 +42,7 @@ hs = "gs"
 ginnit = "git init"
 UP = "up"
 weather = "wttr"
+oh = "echo fuck"
 
 [dev]
 [dev.aliases]
