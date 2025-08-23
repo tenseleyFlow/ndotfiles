@@ -1,0 +1,12 @@
+[Unit]
+Description=Cliphist watchers (Wayland clipboard + primary selection)
+After=graphical-session.target
+
+[Service]
+Type=simple
+# Start the regular watcher in the background, then keep the primary watcher in the foreground
+ExecStart=/bin/sh -lc '/usr/bin/wl-paste --watch /usr/bin/cliphist store & exec /usr/bin/wl-paste --primary --watch /usr/bin/cliphist store'
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
