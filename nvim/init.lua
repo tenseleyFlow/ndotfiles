@@ -52,8 +52,7 @@ require("lazy").setup({
   { "folke/which-key.nvim", event = "VeryLazy", opts = {} },
   { "stevearc/dressing.nvim", event = "VeryLazy", opts = {} },
   { "rcarriga/nvim-notify", opts = { timeout = 2000 } },
-  { "folke/noice.nvim", event = "VeryLazy", dependencies = { "MunifTanjim/nui.nvim", "rcarriga/nvim-notify" },
-    opts = { presets = { command_palette = true, long_message_to_split = true } } },
+  -- Removed noice.nvim for faster command execution
   { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
   { "numToStr/Comment.nvim", opts = {} },
   { "kylechui/nvim-surround", event = "VeryLazy", opts = {} },
