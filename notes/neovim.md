@@ -1,6 +1,6 @@
-# Neovim Modern Workflow & Plugin Guide
+# Neovim Configuration Reference
 
-This guide extends the default Neovim keybinds with **modern workflows** (LSP, Telescope, Treesitter, Git, terminals) for Neovim ≥ 0.8. Designed for productivity on Wayland/Hyprland with lazy.nvim config.
+Current keybinds and workflows for the lazy.nvim-based configuration. Optimized for LSP, Telescope, and productivity with Wayland clipboard support.
 
 ---
 
@@ -56,113 +56,170 @@ This guide extends the default Neovim keybinds with **modern workflows** (LSP, T
 
 ---
 
-## Custom Workflow Keymaps (from lazy config)
+## Custom Workflow Keymaps (Current Config)
 
-| Keybind     | Action                              |
-|-------------|-------------------------------------|
-| `<C-s>`     | Save (normal/insert/visual)         |
-| `<leader>q` | Quit                                |
-| `<leader>sv`| Vertical split                      |
-| `<leader>sh`| Horizontal split                    |
-| `<leader>to`| New tab                             |
-| `<leader>ff`| Telescope: find files               |
-| `<leader>fg`| Telescope: live grep                |
-| `<leader>fb`| Telescope: buffers                  |
-| `<leader>fh`| Telescope: help tags                |
-| `-`         | Oil file manager float              |
-| `<C-`>`     | Toggle floating terminal            |
-| `<leader>tr`| Run task (Overseer)                 |
-| `<leader>tt`| Task list toggle                    |
-| `<leader>f` | Format buffer/file (Conform)        |
+**Core Actions:**
+| Keybind | Action |
+|---------|--------|
+| `<C-s>` | Save (normal/insert/visual) |
+| `<leader>q` | Quit |
+| `<Esc>` | Clear search highlights |
+
+**Windows & Tabs:**
+| Keybind | Action |
+|---------|--------|
+| `<leader>sv` | Vertical split |
+| `<leader>sh` | Horizontal split |
+| `<leader>to` | New tab |
+
+**File Management:**
+| Keybind | Action |
+|---------|--------|
+| `<leader>ff` | Telescope: find files |
+| `<leader>fg` | Telescope: live grep |
+| `<leader>fb` | Telescope: buffers |
+| `<leader>fh` | Telescope: help tags |
+| `<leader>fp` | Projects picker |
+| `-` | Oil file manager (float) |
+
+**Terminal & Tasks:**
+| Keybind | Action |
+|---------|--------|
+| `<C-`>` | Toggle floating terminal |
+| `<leader>tr` | Run task (Overseer) |
+| `<leader>tt` | Task list toggle |
+
+**Formatting:**
+| Keybind | Action |
+|---------|--------|
+| `<leader>f` | Format buffer (Conform) |
+
+**Visual Mode:**
+| Keybind | Action |
+|---------|--------|
+| `J` | Move selected lines down |
+| `K` | Move selected lines up |
 
 ---
 
-## LSP Workflow (Language Server Protocol)
+## LSP Workflow
 
-Requires `mason.nvim` + `nvim-lspconfig`.
+**Auto-installed servers:**
+`pyright`, `lua_ls`, `clangd`, `rust_analyzer`, `bashls`, `jsonls`, `yamlls`, `html`, `cssls`, `marksman`, `taplo`
 
-| Keybind     | Action                               |
-|-------------|--------------------------------------|
-| `gd`        | Goto definition                      |
-| `gD`        | Goto declaration                     |
-| `gi`        | Goto implementation                  |
-| `gr`        | List references                      |
-| `K`         | Hover docs                           |
-| `<leader>rn`| Rename symbol                        |
-| `<leader>ca`| Code action                          |
-| `<leader>fd`| Format buffer (LSP/formatter)        |
+| Keybind | Action |
+|---------|--------|
+| `gd` | Goto definition |
+| `gD` | Goto declaration |
+| `gi` | Goto implementation |
+| `gr` | List references |
+| `K` | Hover documentation |
+| `<leader>rn` | Rename symbol |
+| `<leader>ca` | Code action |
+| `<leader>fd` | Format buffer (LSP) |
 
 ---
 
 ## Git Integration
 
-- **Gitsigns.nvim**  
-  - Shows inline git diff signs, hunk navigation (`]c` / `[c`), staging hunks (`:Gitsigns stage_hunk`).
+**Gitsigns:**
+- Inline diff signs in gutter
+- Hunk navigation and staging
+- `:Gitsigns stage_hunk`, `:Gitsigns blame_line`
 
-- **LazyGit.nvim**  
-  - `:LazyGit` launches interactive TUI for Git inside Neovim.
+**LazyGit:**
+- `:LazyGit` - Full-featured Git TUI
 
 ---
 
 ## Telescope (Fuzzy Finder)
 
-- `<leader>ff` → Files
-- `<leader>fg` → Live grep
-- `<leader>fb` → Buffers
-- `<leader>fh` → Help tags
+| Keybind | Action |
+|---------|--------|
+| `<leader>ff` | Find files |
+| `<leader>fg` | Live grep |
+| `<leader>fb` | Buffers |
+| `<leader>fh` | Help tags |
+| `<leader>fp` | Projects |
 
-Extra: type `/` inside Telescope for fuzzy-in-list filtering.
+**Inside Telescope:**
+- `<C-j>/<C-k>` - Navigate results
+- `/` - Fuzzy filter in results
 
 ---
 
 ## Treesitter (Syntax Engine)
 
-- Auto-installs parsers for `bash`, `c/cpp`, `lua`, `python`, `rust`, `json`, `yaml`, `toml`, `html/css/js/ts`, `markdown`, `fish`, **fortran**.
-- Provides better highlighting + indenting.
+**Auto-installed parsers:**
+`bash`, `c`, `cpp`, `lua`, `python`, `rust`, `json`, `yaml`, `toml`, `html`, `css`, `javascript`, `typescript`, `markdown`, `markdown_inline`, `make`, `fish`
+
+- Provides enhanced highlighting and indenting
+- Smart text objects and navigation
 
 ---
 
 ## Formatting (Conform.nvim)
 
-| Language     | Formatter(s)                         |
-|--------------|--------------------------------------|
-| Lua          | stylua                               |
-| Python       | ruff_format, black                   |
-| Shell/Fish   | shfmt, fish_indent                   |
-| C/C++        | clang-format                         |
-| JS/TS/HTML   | prettier                             |
-| JSON/YAML    | jq / prettier                        |
-| TOML         | taplo                                |
-| Markdown     | prettier                             |
-| Fortran      | fprettify                            |
+**Auto-format on save** (disabled for files >512KB)
+
+| Language | Formatter(s) |
+|----------|-------------|
+| Lua | stylua |
+| Python | ruff_format, black |
+| Shell scripts | shfmt |
+| Fish | fish_indent |
+| C/C++ | clang_format |
+| JS/TS | prettier |
+| JSON | jq, prettier |
+| YAML | prettier |
+| TOML | taplo |
+| HTML/CSS | prettier |
+| Markdown | prettier |
 
 ---
 
 ## Debugging (nvim-dap + dap-ui)
 
-- `:DapToggleBreakpoint` → set/clear breakpoint
-- `:DapContinue` → run/start
-- `:DapStepOver` / `:DapStepInto` / `:DapStepOut`
-- DAP UI auto-opens on session start.
+**Basic DAP setup included:**
+- `:DapToggleBreakpoint` - Set/clear breakpoint
+- `:DapContinue` - Run/start debugging
+- `:DapStepOver/Into/Out` - Step through code
+- DAP UI auto-opens/closes with debug sessions
 
 ---
 
-## Bonus: Multi-Cursor
+## UI Enhancements
 
-- Native block selections: `Ctrl+v` + `I`/`A`
-- True multi-cursor: install **vim-visual-multi**
-  - `Ctrl+n` → add cursor to next occurrence
-  - `Ctrl+p` → add cursor to prev
-  - `Ctrl+x` → skip
+**Current plugins:**
+- **TokyoNight theme** (night style)
+- **Lualine** - Status line with global status
+- **Which-key** - Keybind hints
+- **Dressing** - Better UI for inputs/selects
+- **Notify** - Pretty notifications
+- **Indent-blankline** - Indentation guides
+- **Comment.nvim** - Easy commenting
+- **nvim-surround** - Surround text objects
 
 ---
 
-## Quick Efficiency Tips
-- Use `.` to repeat edits, `:noh` to clear highlights
-- Combine motions: `d2w` (delete 2 words), `c$` (change to end of line)
-- Use **Overseer** for project build/run/test integration
-- Map `-` (Oil) for directory browsing like a mini file manager
-- Use `<C-`>` as a popup shell without leaving Neovim
-- Keep `<leader>` easy (`<Space>` in this config) for speed
+## Configuration Highlights
+
+**Leaders:** `<Space>` (main), `,` (local)
+
+**Auto-features:**
+- Format on save (files <512KB)
+- Cursor position restoration
+- Yank highlighting
+- Wayland clipboard integration
+
+**Project Management:**
+- Project detection via `.git`, `pyproject.toml`, `package.json`, `Makefile`
+- Overseer task runner integration
+- Oil file manager with hidden files shown
+
+**Performance:**
+- Removed noice.nvim for faster commands
+- Lazy loading for most plugins
+- Smart format-on-save size limits
 
 ---

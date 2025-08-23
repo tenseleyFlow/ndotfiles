@@ -1,12 +1,29 @@
-# Plugin Defaults — Quick Reference
+# Tmux Configuration Reference
 
-> “prefix” means your tmux prefix key (default: Ctrl+b).
+Current tmux setup with plugin defaults and custom prefix keys.
+
+## Prefix Keys
+
+| Key | Type |
+|-----|------|
+| `Ctrl-Space` | Primary prefix |
+| `Ctrl-b` | Fallback prefix |
+
+## Core Bindings
+
+| Keybind | Action |
+|---------|--------|
+| `prefix + r` | Reload configuration |
+
+## Plugin Defaults — Quick Reference
+
+> "prefix" means your tmux prefix key (Ctrl-Space or Ctrl-b).
 
 | Plugin | Default keys | Context | What it does | Notes / Tips |
 |---|---|---|---|---|
-| tmux-yank | prefix + **y** | Normal mode | Copy the current command-line text to system clipboard. | Also **prefix + Y** copies the pane’s CWD. |
-|  | **y** | Copy-mode | Yank the current selection to system clipboard. | **Y** “puts” selection to the command line. |
-| tmux-copycat | prefix + **/** | Normal mode | Start regex (or plain text) search; enter “copycat mode”. | Then **n/N** next/prev match; **Enter** to copy (vi mode). |
+| tmux-yank | prefix + **y** | Normal mode | Copy the current command-line text to system clipboard. | Also **prefix + Y** copies the pane's CWD. |
+|  | **y** | Copy-mode | Yank the current selection to system clipboard. | **Y** "puts" selection to the command line. |
+| tmux-copycat | prefix + **/** | Normal mode | Start regex (or plain text) search; enter "copycat mode". | Then **n/N** next/prev match; **Enter** to copy (vi mode). |
 |  | prefix + **Ctrl-f** | Normal mode | Predefined search: files. | Other presets below. |
 |  | prefix + **Ctrl-g** | Normal mode | Predefined search: `git status` files. |  |
 |  | prefix + **Alt-h** | Normal mode | Predefined search: SHA hashes. |  |
@@ -24,6 +41,24 @@
 |  | prefix + **U** | Normal mode | Update plugins. |  |
 |  | prefix + **Alt+u** | Normal mode | Uninstall plugins removed from config. |  |
 
-## Verify what’s bound in *your* session
+## Configuration Structure
+
+The tmux configuration is modular:
+- **Main config:** `.tmux.conf` (minimal entrypoint)
+- **Modular includes:** `.tmux.d/` directory
+  - `10-options.conf` - General options
+  - `20-keys.conf` - Keybindings
+  - `30-mouse.conf` - Mouse settings
+  - `40-status-theme.conf` - Status bar theme
+  - `50-plugins.conf` - Plugin configuration
+- **Local overrides:** `.tmux.local.conf`
+
+## Terminal Features
+
+- **Truecolor support** enabled
+- **256-color terminal** capability
+- **Terminal overrides** for proper color support
+
+## Verify what's bound in *your* session
 - List keys: `tmux list-keys | grep -Ei 'yank|copycat|open|fzf|resurrect|continuum|tpm'`
 - Some plugins adapt to tmux version/OS; use the command above as source of truth.

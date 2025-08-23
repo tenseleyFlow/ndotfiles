@@ -1,80 +1,119 @@
-# Micro — keys & workflow (fish + plugins)
+# Micro Editor Configuration Reference
 
----
+Current keybinds, plugins, and workflow for the micro editor setup.
 
-## Core (built-in)
-- **Ctrl-E** — Command bar. Run `help …`, `plugin list`, `open`, `fzfinder`, `log`, etc.
-- **Ctrl-S** — Save. **Ctrl-Q** — Close current buffer (quit if last). **Ctrl-O** — Open file (fallback; you’ll usually use **Alt-f**).
+## Core Keybinds
 
----
+| Keybind | Action |
+|---------|--------|
+| `Ctrl-E` | Command bar (`help`, `plugin list`, `open`, etc.) |
+| `Ctrl-S` | Save file |
+| `Ctrl-Q` | Close buffer/quit |
+| `Ctrl-O` | Open file (fallback) |
 
-## fzfinder (fast file open)
-**Open:** **Alt-f**  
-**What it does:** Fuzzy-find files using our git-aware wrapper (`mfzf`). In repos it lists `git ls-files`; otherwise it uses `fd`. Preview shows with `bat`. Opens in a **new tab**.
+## File Management
 
-**Inside the picker (fzf):**
-- Type to filter; **↑/↓** or **Ctrl-j/Ctrl-k** to move
-- **Enter** open selection **Tab / Shift-Tab** multi-select (if enabled)
-- Our options: `--height=85% --layout=reverse [--multi] --preview 'bat -f -p {}'`
+**FZF File Finder:**
+| Keybind | Action |
+|---------|--------|
+| `Alt-f` | Fuzzy file finder (mfzf) |
 
-**Tweakable:**
-- `settings.json` → `fzfarg`, `fzfopen` (`newtab` or `open`), `fzfpath` (`relative` or `absolute`).
-- Edit `/usr/local/bin/mfzf` to ignore heavy dirs (`node_modules`, `dist`, `target`, …).
+**Current settings:**
+- Uses custom `mfzf` wrapper (git-aware)
+- Preview with `bat -f -p {}`
+- Opens in new tab
+- Shows relative paths
+- External clipboard integration
 
----
+**Inside fzf:**
+- Type to filter, `↑/↓` or `Ctrl-j/k` to navigate
+- `Enter` to open, `Tab/Shift-Tab` for multi-select
 
-## Palettero (command palette)
-**Open:** **Ctrl-P** (also **Alt-Ctrl-Space**)  
-**What it does:** Fuzzy-search *any* Micro/plug-in command (and text filters) and run it. Great for discovery.
+## Command Palette
 
-**Use:** Open → type (“jump”, “tree”, “help fzfinder”, “pipe jq .”, …) → **Enter**.
+| Keybind | Action |
+|---------|--------|
+| `Ctrl-P` | Command palette (palettero) |
+| `Ctrl-Space` | Command palette (alt binding) |
 
-**Pro tip:** add your favorite one-liners as palette items (JSON format via `editmenu`), e.g. JSON pretty, YAML⇄JSON, sort unique.
+**Usage:**
+- Fuzzy search any micro/plugin command
+- Type command names ("jump", "tree", "help", "pipe jq .") and run
+- Great for command discovery and one-liners
 
----
+## LSP Integration
 
-## Quickfix (project grep & jump)
-**Search word under cursor:** **Alt-g**  
-**Prompted search:** **Ctrl-Alt-g**  
-**What it does:** Runs ripgrep (`rg -n`) and drops results into a quickfix list. Select a line → **Enter** jumps to file/line.
+| Keybind | Action |
+|---------|--------|
+| `Alt-d` | Go to definition |
+| `Alt-k` | Show hover info |
+| `Alt-r` | Show references |
 
-**Flow:** Trigger search → use **↑/↓** to browse results → **Enter** to jump. Close the panel when done.
+*Note: Requires LSP servers installed and configured*
 
----
+## Build & Run System
 
-## runit (run/build)
-**Run current file:** **F5** **Make:** **F12** **Make (background):** **F9**  
-**What it does:** Saves & runs the active file (language/shebang aware). In projects with a `Makefile`, use F12/F9 for builds.
+| Keybind | Action |
+|---------|--------|
+| `F5` | Run current file |
+| `F12` | Make (foreground) |
+| `F9` | Make (background) |
 
-**Tips:**
-- For scripts, add a proper shebang (e.g., `#!/usr/bin/env python3`) so F5 “just works”.
-- Use the command bar to run custom commands on demand if there’s no Makefile.
+**Features:**
+- Auto-detects file type/shebang
+- Makefile support for projects
+- Language-aware execution
 
----
+## File Tree
 
-## Filemanager (side tree)
-**Toggle tree:** **Ctrl-b**  
-**What it does:** Opens/closes a file tree pane you can navigate with arrows and open with **Enter**. Handy for quick browsing.
+| Keybind | Action |
+|---------|--------|
+| `Ctrl-b` | Toggle file tree |
 
-**Tip:** Set `filemanager.openonstart = true` if you want it by default (add in `settings.json`).
+**Usage:**
+- Navigate with arrows, open with `Enter`
+- Add `"filemanager.openonstart": true` to auto-open
 
----
+## Code Navigation
 
-## Jump (symbols / headings)
-**Open outline:** **F4**  
-**What it does:** Fuzzy-jump within the current buffer (functions, classes, Markdown headings, etc.).
+| Keybind | Action |
+|---------|--------|
+| `F4` | Jump to symbol/heading |
 
----
+**Features:**
+- Functions, classes, Markdown headings
+- Fuzzy search within current buffer
 
-## LSP (optional)
-**What it does:** Hover/definition/references/completion/formatting with language servers.  
-**Typical defaults:** hover, go-to-definition, references, completion (check `help lsp` after installing servers).
+## Comments
 
----
+| Keybind | Action |
+|---------|--------|
+| `Alt-/` | Toggle comment |
+| `Ctrl-_` | Toggle comment (alt) |
 
-## Handy palette one-liners
-Run these from **Ctrl-E** (or bind keys to them):
-- `pipe jq .` — pretty-print JSON
-- `pipe yq -P` — pretty JSON→YAML (needs `yq`)
-- `pipe sort -u` — sort unique lines
-- `pipe sed -E 's/[[:space:]]+$//'` — strip trailing whitespace
+*Uses comment.lua plugin*
+
+## Plugin Configuration
+
+**Current plugins:**
+- **fzfinder** - Fuzzy file finding with mfzf
+- **palettero** - Command palette
+- **comment** - Smart commenting
+- **LSP integration** - Language server support
+- **runit** - File execution
+- **jumptag** - Symbol navigation
+- **makeup** - Build system
+
+**Useful Commands:**
+- `pipe jq .` - Pretty-print JSON
+- `pipe yq -P` - JSON→YAML conversion  
+- `pipe sort -u` - Sort unique lines
+- `pipe sed -E 's/[[:space:]]+$//'` - Strip trailing whitespace
+
+## Settings Summary
+
+- External clipboard integration
+- Custom mfzf command for file finding
+- Bat preview integration
+- New tab opening for files
+- Relative path display
