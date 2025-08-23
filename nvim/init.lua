@@ -61,7 +61,14 @@ require("lazy").setup({
   -- Files, search, projects ----------------------------------
   { "nvim-telescope/telescope.nvim", dependencies = { "nvim-lua/plenary.nvim" } },
   { "nvim-telescope/telescope-fzf-native.nvim", build = "make", cond = function() return vim.fn.executable("make") == 1 end },
-  { "ahmedkhalf/project.nvim", opts = { detection_methods = { "pattern", "lsp" }, patterns = { ".git", "pyproject.toml", "package.json", "Makefile" } } },
+  { "ahmedkhalf/project.nvim", 
+    config = function()
+      require("project_nvim").setup({
+        detection_methods = { "pattern", "lsp" },
+        patterns = { ".git", "pyproject.toml", "package.json", "Makefile" }
+      })
+    end
+  },
   { "stevearc/oil.nvim", opts = { view_options = { show_hidden = true } } },
 
   -- Git -------------------------------------------------------
@@ -73,15 +80,18 @@ require("lazy").setup({
   { "stevearc/overseer.nvim", opts = {} },
 
   -- Treesitter ------------------------------------------------
-  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate", opts = {
-      ensure_installed = {
-        "bash", "c", "cpp", "lua", "python", "rust", "json", "yaml", "toml",
-        "html", "css", "javascript", "typescript", "markdown", "markdown_inline",
-        "make", "fish", "fortran"
-      },
-      highlight = { enable = true },
-      indent = { enable = true },
-    }
+  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup({
+        ensure_installed = {
+          "bash", "c", "cpp", "lua", "python", "rust", "json", "yaml", "toml",
+          "html", "css", "javascript", "typescript", "markdown", "markdown_inline",
+          "make", "fish"
+        },
+        highlight = { enable = true },
+        indent = { enable = true },
+      })
+    end
   },
 
   -- LSP, format, lint ----------------------------------------
@@ -104,14 +114,13 @@ require("lazy").setup({
         javascript = { "prettier" }, typescript = { "prettier" },
         json = { "jq", "prettier" }, yaml = { "prettier" }, toml = { "taplo" },
         html = { "prettier" }, css = { "prettier" }, markdown = { "prettier" },
-        fortran = { "fprettify" },
       },
     }
   },
 
   -- Debugging (optional, light defaults) ---------------------
   { "mfussenegger/nvim-dap" },
-  { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap" } },
+  { "rcarriga/nvim-dap-ui", dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } },
 }, {
   install = { colorscheme = { "tokyonight" } },
   change_detection = { notify = false },
@@ -128,8 +137,18 @@ require("lualine").setup({})
 
 -- Telescope
 local telescope = require("telescope")
-telescope.setup({ defaults = { mappings = { i = { ["<C-j>"] = "move_selection_next", ["<C-k>"] = "move_selection_previous" } } } })
+telescope.setup({ 
+  defaults = { 
+    mappings = { 
+      i = { 
+        ["<C-j>"] = "move_selection_next", 
+        ["<C-k>"] = "move_selection_previous" 
+      } 
+    } 
+  } 
+})
 pcall(telescope.load_extension, "fzf")
+pcall(telescope.load_extension, "projects")
 
 -- Oil: simple file manager toggle
 vim.keymap.set("n", "-", function() require("oil").toggle_float() end, { desc = "Oil file manager" })
@@ -144,21 +163,20 @@ vim.keymap.set("n", "<leader>tr", ":OverseerRun<CR>",    { desc = "Run a task" }
 -- Gitsigns
 require("gitsigns").setup()
 
--- Treesitter
-require("nvim-treesitter.configs").setup({})
-
 -- Mason + LSPConfig
 require("mason").setup()
-local mlsp = require("mason-lspconfig")
-mlsp.setup({ ensure_installed = {
-  "pyright", "ruff_lsp", "lua_ls", "clangd", "rust_analyzer", "bashls",
-  "jsonls", "yamlls", "html", "cssls", "ts_ls", "marksman", "taplo", "fortls"
-}})
+local mason_lspconfig = require("mason-lspconfig")
+
+-- Ensure these servers are installed
+mason_lspconfig.setup({
+  ensure_installed = {
+    "pyright", "lua_ls", "clangd", "rust_analyzer", "bashls",
+    "jsonls", "yamlls", "html", "cssls", "marksman", "taplo"
+  }
+})
 
 local lspconfig = require("lspconfig")
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-local ok_cmp, cmp_lsp = pcall(require, "cmp_nvim_lsp")
-if ok_cmp then capabilities = cmp_lsp.default_capabilities(capabilities) end
 
 -- Pretty borders
 local handlers = {
@@ -181,19 +199,35 @@ local on_attach = function(_, bufnr)
   nmap("<leader>fd", function() vim.lsp.buf.format({ async = true }) end, "Format buffer")
 end
 
-mlsp.setup_handlers({ function(server)
-  lspconfig[server].setup({ capabilities = capabilities, on_attach = on_attach, handlers = handlers })
-end })
+-- Manual server setup (more compatible)
+local servers = {
+  pyright = {},
+  lua_ls = {
+    settings = {
+      Lua = {
+        diagnostics = { globals = { "vim" } },
+        workspace = { checkThirdParty = false }
+      }
+    }
+  },
+  clangd = {},
+  rust_analyzer = {},
+  bashls = {},
+  jsonls = {},
+  yamlls = {},
+  html = {},
+  cssls = {},
+  marksman = {},
+  taplo = {},
+}
 
--- Lua LS: tuned for Neovim config dev
-lspconfig.lua_ls.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  settings = { Lua = { diagnostics = { globals = { "vim" } }, workspace = { checkThirdParty = false } } }
-})
-
--- Ruff: prefer as linter + fixer with Pyright for types
-lspconfig.ruff_lsp.setup({ capabilities = capabilities, on_attach = on_attach })
+-- Setup each server
+for server, config in pairs(servers) do
+  config.capabilities = capabilities
+  config.on_attach = on_attach
+  config.handlers = handlers
+  lspconfig[server].setup(config)
+end
 
 -- DAP minimal sugar
 local dap_ok, dapui = pcall(require, "dapui")
@@ -206,7 +240,7 @@ if dap_ok then
 end
 
 ---------------------------------------------------------------
--- 4) Keymaps you’ll actually use (and remember)
+-- 4) Keymaps you'll actually use (and remember)
 ---------------------------------------------------------------
 local map = vim.keymap.set
 -- Save, quit
@@ -223,6 +257,7 @@ map("n", "<leader>ff", function() require("telescope.builtin").find_files() end,
 map("n", "<leader>fg", function() require("telescope.builtin").live_grep()  end, { desc = "Live grep" })
 map("n", "<leader>fb", function() require("telescope.builtin").buffers()    end, { desc = "Buffers" })
 map("n", "<leader>fh", function() require("telescope.builtin").help_tags()  end, { desc = "Help tags" })
+map("n", "<leader>fp", function() require("telescope").extensions.projects.projects() end, { desc = "Projects" })
 
 -- Move lines (visual)
 map("v", "J", ":m '>+1<CR>gv=gv")
