@@ -1,6 +1,6 @@
 # Tmux Configuration Reference
 
-Current tmux setup with plugin defaults and custom prefix keys.
+Custom tmux setup with global keybind toggle and Wayland integration.
 
 ## Prefix Keys
 
@@ -8,57 +8,113 @@ Current tmux setup with plugin defaults and custom prefix keys.
 |-----|------|
 | `Ctrl-Space` | Primary prefix |
 | `Ctrl-b` | Fallback prefix |
+| `prefix + r` | Reload configuration |
 
-## Core Bindings
+## Global Toggle System
 
 | Keybind | Action |
 |---------|--------|
-| `prefix + r` | Reload configuration |
+| `Ctrl-g` | Toggle ALL custom keybinds on/off |
 
-## Plugin Defaults — Quick Reference
+**When OFF:** All custom binds disabled, keys pass through to applications  
+**When ON:** Custom tmux binds active (default state)
 
-> "prefix" means your tmux prefix key (Ctrl-Space or Ctrl-b).
+## Window (Tab) Management
 
-| Plugin | Default keys | Context | What it does | Notes / Tips |
-|---|---|---|---|---|
-| tmux-yank | prefix + **y** | Normal mode | Copy the current command-line text to system clipboard. | Also **prefix + Y** copies the pane's CWD. |
-|  | **y** | Copy-mode | Yank the current selection to system clipboard. | **Y** "puts" selection to the command line. |
-| tmux-copycat | prefix + **/** | Normal mode | Start regex (or plain text) search; enter "copycat mode". | Then **n/N** next/prev match; **Enter** to copy (vi mode). |
-|  | prefix + **Ctrl-f** | Normal mode | Predefined search: files. | Other presets below. |
-|  | prefix + **Ctrl-g** | Normal mode | Predefined search: `git status` files. |  |
-|  | prefix + **Alt-h** | Normal mode | Predefined search: SHA hashes. |  |
-|  | prefix + **Ctrl-u** | Normal mode | Predefined search: URLs. |  |
-|  | prefix + **Ctrl-d** | Normal mode | Predefined search: numbers (digits). |  |
-|  | prefix + **Alt-i** | Normal mode | Predefined search: IP addresses. |  |
-| tmux-open | **o** | Copy-mode | Open highlighted path/URL with system default app. | **Ctrl-o** open in `$EDITOR`; **Shift-s** search the text. |
-| tmux-fzf | prefix + **F** (Shift+f) | Normal mode | Launch fzf-driven session/window/pane switcher (popup on modern tmux). | Inside fzf: **Tab/Shift-Tab** to multi-select. |
-| tmux-fzf-url | prefix + **u** | Normal mode | Fuzzy-pick any URL visible in the pane and open it. | Change with `set -g @fzf-url-bind 'x'` if desired. |
-| tmux-resurrect | prefix + **Ctrl-s** | Normal mode | Save full tmux state (sessions/windows/panes, dirs, layout). |  |
-|  | prefix + **Ctrl-r** | Normal mode | Restore last saved state. |  |
-| tmux-continuum | *(no keys; runs in background)* | — | Auto-saves every ~15 min; auto-restore on tmux start if enabled. | Enable restore: `set -g @continuum-restore 'on'`. |
-| tmux-prefix-highlight | *(no keys)* | — | Adds `#{prefix_highlight}` segment showing when prefix is active. | Add it to your status-left/right to display. |
-| TPM (plugin manager) | prefix + **I** | Normal mode | Install/refresh plugins. |  |
-|  | prefix + **U** | Normal mode | Update plugins. |  |
-|  | prefix + **Alt+u** | Normal mode | Uninstall plugins removed from config. |  |
+| Keybind | Action |
+|---------|--------|
+| `Ctrl-t` | New window |
+| `Ctrl-w` | Close window (with confirmation) |
+| `Ctrl-Alt-Left` | Previous window |
+| `Ctrl-Alt-Right` | Next window |
 
-## Configuration Structure
+## Pane Management
 
-The tmux configuration is modular:
-- **Main config:** `.tmux.conf` (minimal entrypoint)
-- **Modular includes:** `.tmux.d/` directory
-  - `10-options.conf` - General options
-  - `20-keys.conf` - Keybindings
-  - `30-mouse.conf` - Mouse settings
-  - `40-status-theme.conf` - Status bar theme
-  - `50-plugins.conf` - Plugin configuration
-- **Local overrides:** `.tmux.local.conf`
+**Create Panes:**
+| Keybind | Action |
+|---------|--------|
+| `Alt-\` | Split vertically (left/right) |
+| `Alt-|` | Split horizontally (top/bottom) |
 
-## Terminal Features
+**Close Panes:**
+| Keybind | Action |
+|---------|--------|
+| `Alt-Shift-W` | Kill pane (with confirmation) |
+| `Ctrl-Alt-w` | Kill pane (backup binding) |
 
-- **Truecolor support** enabled
-- **256-color terminal** capability
-- **Terminal overrides** for proper color support
+**Navigate Panes:**
+| Keybind | Action |
+|---------|--------|
+| `Ctrl-Alt-Left` | Focus left pane |
+| `Ctrl-Alt-Right` | Focus right pane |
+| `Ctrl-Alt-Up` | Focus up pane |
+| `Ctrl-Alt-Down` | Focus down pane |
 
-## Verify what's bound in *your* session
-- List keys: `tmux list-keys | grep -Ei 'yank|copycat|open|fzf|resurrect|continuum|tpm'`
-- Some plugins adapt to tmux version/OS; use the command above as source of truth.
+**Resize Panes:**
+| Keybind | Action |
+|---------|--------|
+| `Ctrl-Alt-Shift-Left` | Resize left (5 units) |
+| `Ctrl-Alt-Shift-Right` | Resize right (5 units) |
+| `Ctrl-Alt-Shift-Up` | Resize up (2 units) |
+| `Ctrl-Alt-Shift-Down` | Resize down (2 units) |
+
+## Copy Mode (Vi-style)
+
+**Clipboard Integration (Wayland):**
+| Keybind | Action |
+|---------|--------|
+| `y` | Copy and exit copy-mode |
+| `Y` | Copy and stay in copy-mode |
+| Mouse drag | Copy without exiting copy-mode |
+
+## Plugin Keybinds
+
+Your installed plugins and their default keybinds:
+
+| Plugin | Keybind | Action |
+|--------|---------|--------|
+| **tmux-yank** | `prefix + y` | Copy command line to clipboard |
+| | `y` (copy-mode) | Yank selection |
+| **tmux-copycat** | `prefix + /` | Regex search |
+| | `prefix + Ctrl-f` | Search files |
+| | `prefix + Ctrl-g` | Search git files |
+| | `prefix + Ctrl-u` | Search URLs |
+| | `prefix + Ctrl-d` | Search numbers |
+| | `prefix + Alt-h` | Search SHA hashes |
+| | `prefix + Alt-i` | Search IP addresses |
+| **tmux-open** | `o` (copy-mode) | Open highlighted path/URL |
+| | `Ctrl-o` (copy-mode) | Open in $EDITOR |
+| **tmux-fzf** | `prefix + F` | FZF session/window/pane picker |
+| **tmux-fzf-url** | `prefix + u` | FZF URL picker |
+| **tmux-resurrect** | `prefix + Ctrl-s` | Save session |
+| | `prefix + Ctrl-r` | Restore session |
+| **tmux-continuum** | *(automatic)* | Auto-save every 15 min |
+| **TPM** | `prefix + I` | Install plugins |
+| | `prefix + U` | Update plugins |
+| | `prefix + Alt-u` | Uninstall removed plugins |
+
+## Configuration Features
+
+**Options:**
+- Vi-mode keys enabled
+- Mouse support enabled
+- 100,000 line history
+- Windows/panes start at index 1
+- Auto-renumber windows
+- Fast escape time (10ms)
+- Wayland clipboard integration via wl-copy
+
+**Modular Structure:**
+- `~/.tmux.conf` - Main entry point
+- `~/.tmux.d/10-options.conf` - General options
+- `~/.tmux.d/20-keys.conf` - Custom keybinds  
+- `~/.tmux.d/30-mouse.conf` - Mouse settings
+- `~/.tmux.d/40-status-theme.conf` - Status bar
+- `~/.tmux.d/50-plugins.conf` - Plugin configuration
+- `~/.tmux.local.conf` - Local overrides
+
+**Special Features:**
+- All custom keybinds can be globally toggled with `Ctrl-g`
+- When disabled, keys pass through to applications
+- Wayland clipboard integration with wl-copy
+- Auto-restore sessions on tmux startup
