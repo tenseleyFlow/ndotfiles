@@ -172,10 +172,10 @@ sketchybar --add item ssh_menu right \
 sketchybar --add item srv_right right \
     --set srv_right \
         update_freq=30 \
-        script="$PLUGDIR/server-stats.sh StarchNet" \
+        script="$PLUGDIR/server-stats.sh kohaku" \
         icon=$'\uf1c0' \
         icon.padding_right=10 \
-        label.padding_right=12
+        label.padding_right=20
 
 # server statistics
 # (load average and memory usage)
@@ -186,6 +186,6 @@ sketchybar --add item srv_right2 right \
         script="$PLUGDIR/server-stats.sh almanta" \
         icon=$'\uf1c0' \
         icon.padding_right=10 \
-        label.padding_right=12
+        label.padding_right=20
 
 sketchybar --update
