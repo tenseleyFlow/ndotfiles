@@ -1,105 +1,225 @@
-# Neovim Keybind Guide for Modern Usage
+# Neovim Configuration Reference
 
-This guide provides a concise reference for keybindings in Neovim (version 0.7 or later), focusing on quick navigation, jumping between words and lines, and handling multiple cursors or selections. Master these to enhance your productivity in this powerful text editor.
+Current keybinds and workflows for the lazy.nvim-based configuration. Optimized for LSP, Telescope, and productivity with Wayland clipboard support.
 
-## Neovim Modes Overview
+---
 
-Neovim operates in distinct modes, each serving specific purposes. Understanding these is essential for effective editing.
+## Modes Overview
 
-| Mode            | Description                                      | How to Enter                     |
-|-----------------|--------------------------------------------------|----------------------------------|
-| **Normal Mode** | Default mode for navigation and commands        | Press `Esc` from other modes     |
-| **Insert Mode** | For typing and inserting text                   | Press `i`, `a`, `o`, etc. from Normal Mode |
-| **Visual Mode** | For selecting text (line, block, or character)  | Press `v`, `V`, or `Ctrl+v` from Normal Mode |
-| **Command Mode**| For entering Ex commands (e.g., saving, quitting)| Press `:` from Normal Mode       |
+| Mode            | Description                                   | Enter From            |
+|-----------------|-----------------------------------------------|-----------------------|
+| **Normal**      | Navigation, commands                         | `Esc`                 |
+| **Insert**      | Insert/typing                                | `i`, `a`, `o`, `O`    |
+| **Visual**      | Select text (char, line, block)              | `v`, `V`, `Ctrl+v`    |
+| **Command**     | Ex commands (`:w`, `:q`)                     | `:`                   |
+| **Terminal**    | Interactive terminal buffer                  | `:term`, `<C-`>`      |
 
-## Navigation Keybindings
+---
 
-These keybindings are primarily for **Normal Mode** and help you move around your editor efficiently.
+## Navigation Keybindings (Default)
 
-### Basic Movement
-| Keybind       | Action                            |
-|---------------|-----------------------------------|
-| `h`           | Move left one character          |
-| `j`           | Move down one line               |
-| `k`           | Move up one line                 |
-| `l`           | Move right one character         |
-| `w`           | Jump to start of next word       |
-| `b`           | Jump to start of previous word   |
-| `e`           | Jump to end of current/next word |
-| `0`           | Jump to start of line            |
-| `$`           | Jump to end of line              |
-| `gg`          | Jump to first line of file       |
-| `G`           | Jump to last line of file        |
-| `{number}G`   | Jump to specific line number (e.g., `5G` for line 5) |
+| Keybind    | Action                               |
+|------------|--------------------------------------|
+| `h`/`l`    | Left / right one character           |
+| `j`/`k`    | Down / up one line                   |
+| `w`/`e`/`b`| Next word / end word / back a word   |
+| `0` / `$`  | Start / end of line                  |
+| `gg` / `G` | First / last line of file            |
+| `{n}G`     | Jump to line n                       |
+| `Ctrl+u/d` | Scroll half screen up/down           |
+| `Ctrl+b/f` | Scroll full screen up/down           |
+| `%`        | Match brackets/parentheses           |
+| `/text`    | Search forward (n/N = next/prev)     |
+| `?text`    | Search backward (n/N = next/prev)    |
+| `*` / `#`  | Next/prev word under cursor          |
 
-### Scrolling and Larger Jumps
-| Keybind       | Action                            |
-|---------------|-----------------------------------|
-| `Ctrl+u`      | Scroll up half a screen          |
-| `Ctrl+d`      | Scroll down half a screen        |
-| `Ctrl+b`      | Scroll up a full screen (backward)|
-| `Ctrl+f`      | Scroll down a full screen (forward)|
-| `%`           | Jump to matching bracket/parenthesis |
+---
 
-### Search-Based Navigation
-| Keybind       | Action                            |
-|---------------|-----------------------------------|
-| `/` + `text` + `Enter` | Search forward for text; use `n` for next, `N` for previous |
-| `?` + `text` + `Enter` | Search backward for text; use `n` for next, `N` for previous |
-| `*`           | Jump to next occurrence of word under cursor |
-| `#`           | Jump to previous occurrence of word under cursor |
+## Editing Essentials
 
-## Editing and Multi-Cursor Techniques
+| Keybind | Action                                   |
+|---------|------------------------------------------|
+| `i`/`a` | Insert before / after cursor             |
+| `o`/`O` | New line below / above                   |
+| `x`     | Delete character                         |
+| `dd`    | Delete line                              |
+| `yy`    | Yank (copy) line                         |
+| `p`/`P` | Paste after / before cursor              |
+| `.`     | Repeat last command                      |
+| `{n}{op}` | Repeat operation n times (`5dd`)       |
 
-Neovim lacks native multi-cursor support, but Visual Mode and other features provide powerful alternatives. These are mostly **Normal Mode** commands unless noted.
+### Visual Mode Tricks
+- `v`/`V`/`Ctrl+v` → char/line/block selections
+- Block mode (`Ctrl+v` + `j/k`):
+  - `I` insert before selection (applies to all lines)
+  - `A` append after selection
 
-### Basic Editing
-| Keybind       | Action                            |
-|---------------|-----------------------------------|
-| `i`           | Enter Insert Mode before cursor   |
-| `a`           | Enter Insert Mode after cursor    |
-| `o`           | Open new line below, enter Insert Mode |
-| `O`           | Open new line above, enter Insert Mode |
-| `x`           | Delete character under cursor     |
-| `dd`          | Delete current line               |
-| `yy`          | Yank (copy) current line          |
-| `p`           | Paste after cursor                |
-| `P`           | Paste before cursor               |
+---
 
-### Visual Mode for Selections (Multi-Cursor Alternative)
-| Keybind       | Action                            |
-|---------------|-----------------------------------|
-| `v`           | Start character-wise Visual Mode  |
-| `V`           | Start line-wise Visual Mode       |
-| `Ctrl+v`      | Start block-wise Visual Mode (for columnar edits) |
-| After selection, `I` | Insert at start of each selected line/block (block mode) |
-| After selection, `A` | Append at end of each selected line/block (block mode) |
+## Custom Workflow Keymaps (Current Config)
 
-**Note:** For block edits, select with `Ctrl+v`, move with `j`/`k`, then use `I` or `A` to edit multiple lines at once. Press `Esc` to apply changes.
+**Core Actions:**
+| Keybind | Action |
+|---------|--------|
+| `<C-s>` | Save (normal/insert/visual) |
+| `<leader>q` | Quit |
+| `<Esc>` | Clear search highlights |
 
-### Repeating Commands for Efficient Edits
-| Keybind       | Action                            |
-|---------------|-----------------------------------|
-| `.`           | Repeat the last command          |
-| `{number}{command}` | Repeat command a specific number of times (e.g., `5dd` deletes 5 lines) |
+**Windows & Tabs:**
+| Keybind | Action |
+|---------|--------|
+| `<leader>sv` | Vertical split |
+| `<leader>sh` | Horizontal split |
+| `<leader>to` | New tab |
 
-## Plugin for True Multi-Cursor Support
+**File Management:**
+| Keybind | Action |
+|---------|--------|
+| `<leader>ff` | Telescope: find files |
+| `<leader>fg` | Telescope: live grep |
+| `<leader>fb` | Telescope: buffers |
+| `<leader>fh` | Telescope: help tags |
+| `<leader>fp` | Projects picker |
+| `-` | Oil file manager (float) |
 
-For a modern multi-cursor experience (like VS Code), install the `vim-visual-multi` plugin.
+**Terminal & Tasks:**
+| Keybind | Action |
+|---------|--------|
+| `<C-`>` | Toggle floating terminal |
+| `<leader>tr` | Run task (Overseer) |
+| `<leader>tt` | Task list toggle |
 
-| Plugin        | Keybind       | Action                            |
-|---------------|---------------|-----------------------------------|
-| `vim-visual-multi` | `Ctrl+n` | Start multi-cursor or add cursor at next word occurrence |
-| `vim-visual-multi` | `Ctrl+p` | Add cursor at previous occurrence |
-| `vim-visual-multi` | `Ctrl+x` | Skip an occurrence               |
+**Formatting:**
+| Keybind | Action |
+|---------|--------|
+| `<leader>f` | Format buffer (Conform) |
 
-**Installation:** Add via plugin manager, e.g., `Plug 'mg979/vim-visual-multi'` with vim-plug.
+**Visual Mode:**
+| Keybind | Action |
+|---------|--------|
+| `J` | Move selected lines down |
+| `K` | Move selected lines up |
 
-## Quick Tips for Efficiency
--  **Practice Normal Mode:** Use it for navigation to minimize mode-switching.
--  **Leverage `.` for Repetition:** Repeat edits quickly with the dot operator.
--  **Combine Commands:** Use motions with actions, e.g., `d2w` (delete 2 words) or `c$` (change to end of line).
--  **Use `:help`:** Type `:help key-notation` or `:help motion` in Neovim for detailed docs.
+---
 
-This tabulated guide focuses on default Neovim keybindings and practical workflows. For customizations or plugin setup help, let me know!
+## LSP Workflow
+
+**Auto-installed servers:**
+`pyright`, `lua_ls`, `clangd`, `rust_analyzer`, `bashls`, `jsonls`, `yamlls`, `html`, `cssls`, `marksman`, `taplo`
+
+| Keybind | Action |
+|---------|--------|
+| `gd` | Goto definition |
+| `gD` | Goto declaration |
+| `gi` | Goto implementation |
+| `gr` | List references |
+| `K` | Hover documentation |
+| `<leader>rn` | Rename symbol |
+| `<leader>ca` | Code action |
+| `<leader>fd` | Format buffer (LSP) |
+
+---
+
+## Git Integration
+
+**Gitsigns:**
+- Inline diff signs in gutter
+- Hunk navigation and staging
+- `:Gitsigns stage_hunk`, `:Gitsigns blame_line`
+
+**LazyGit:**
+- `:LazyGit` - Full-featured Git TUI
+
+---
+
+## Telescope (Fuzzy Finder)
+
+| Keybind | Action |
+|---------|--------|
+| `<leader>ff` | Find files |
+| `<leader>fg` | Live grep |
+| `<leader>fb` | Buffers |
+| `<leader>fh` | Help tags |
+| `<leader>fp` | Projects |
+
+**Inside Telescope:**
+- `<C-j>/<C-k>` - Navigate results
+- `/` - Fuzzy filter in results
+
+---
+
+## Treesitter (Syntax Engine)
+
+**Auto-installed parsers:**
+`bash`, `c`, `cpp`, `lua`, `python`, `rust`, `json`, `yaml`, `toml`, `html`, `css`, `javascript`, `typescript`, `markdown`, `markdown_inline`, `make`, `fish`
+
+- Provides enhanced highlighting and indenting
+- Smart text objects and navigation
+
+---
+
+## Formatting (Conform.nvim)
+
+**Auto-format on save** (disabled for files >512KB)
+
+| Language | Formatter(s) |
+|----------|-------------|
+| Lua | stylua |
+| Python | ruff_format, black |
+| Shell scripts | shfmt |
+| Fish | fish_indent |
+| C/C++ | clang_format |
+| JS/TS | prettier |
+| JSON | jq, prettier |
+| YAML | prettier |
+| TOML | taplo |
+| HTML/CSS | prettier |
+| Markdown | prettier |
+
+---
+
+## Debugging (nvim-dap + dap-ui)
+
+**Basic DAP setup included:**
+- `:DapToggleBreakpoint` - Set/clear breakpoint
+- `:DapContinue` - Run/start debugging
+- `:DapStepOver/Into/Out` - Step through code
+- DAP UI auto-opens/closes with debug sessions
+
+---
+
+## UI Enhancements
+
+**Current plugins:**
+- **TokyoNight theme** (night style)
+- **Lualine** - Status line with global status
+- **Which-key** - Keybind hints
+- **Dressing** - Better UI for inputs/selects
+- **Notify** - Pretty notifications
+- **Indent-blankline** - Indentation guides
+- **Comment.nvim** - Easy commenting
+- **nvim-surround** - Surround text objects
+
+---
+
+## Configuration Highlights
+
+**Leaders:** `<Space>` (main), `,` (local)
+
+**Auto-features:**
+- Format on save (files <512KB)
+- Cursor position restoration
+- Yank highlighting
+- Wayland clipboard integration
+
+**Project Management:**
+- Project detection via `.git`, `pyproject.toml`, `package.json`, `Makefile`
+- Overseer task runner integration
+- Oil file manager with hidden files shown
+
+**Performance:**
+- Removed noice.nvim for faster commands
+- Lazy loading for most plugins
+- Smart format-on-save size limits
+
+---

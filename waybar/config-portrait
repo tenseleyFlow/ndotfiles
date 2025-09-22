@@ -1,0 +1,60 @@
+{
+    // -------------------------------------------------------------------------
+    // Global configuration - Portrait monitor
+    // -------------------------------------------------------------------------
+
+    "layer": "top",
+    "position": "top",
+    "margin-left": 5,
+    "margin-bottom": 0, 
+    "margin-right": 5,
+    "spacing": 3,
+
+    // Only show on portrait monitor
+    "output": ["HDMI-A-2"],
+
+    "modules-left": [
+        "hyprland/workspaces"
+    ],
+    "modules-center": [
+        "clock#portrait"
+    ],
+    "modules-right": [
+        "tray"
+    ],
+
+    // -------------------------------------------------------------------------
+    // Modules for portrait monitor (simplified)
+    // -------------------------------------------------------------------------
+
+    "clock#portrait": {
+        "format": "{:%H:%M}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "today-format": "<b>{}</b>"
+    },
+
+    "hyprland/workspaces": {
+        "format": "{name}",
+        "format-icons": {
+            "1": "一",
+            "2": "二", 
+            "3": "三",
+            "4": "四",
+            "5": "五",
+            "6": "六",
+            "7": "七",
+            "8": "八",
+            "9": "九",
+            "10": "十"
+        },
+        "on-scroll-up": "hyprctl dispatch workspace e+1 1>/dev/null",
+        "on-scroll-down": "hyprctl dispatch workspace e-1 1>/dev/null",
+        "sort-by-number": true,
+        "active-only": false
+    },
+
+    "tray": {
+        "icon-size": 12,
+        "spacing": 3
+    }
+}
