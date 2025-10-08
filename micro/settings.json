@@ -1,10 +1,11 @@
 {
-  "pluginrepos": [
-    "https://raw.githubusercontent.com/MuratovAS/micro-fzfinder/main/repo.json"
-  ],
-  "fzfcmd": "/usr/local/bin/mfzf",
-  "fzfarg": "--preview 'bat -f -p {}'",
-  "fzfopen": "newtab",
-  "fzfpath": "relative",
-  "clipboard": "external"
+    "filemanager.openonstart": true,
+    "fzfarg": "--preview 'bat -f -p {}'",
+    "fzfcmd": "/usr/local/bin/mfzf",
+    "fzfopen": "newtab",
+    "fzfpath": "relative",
+    "pluginrepos": [
+        "https://raw.githubusercontent.com/MuratovAS/micro-fzfinder/main/repo.json"
+    ],
+    "reload": "auto"
 }
