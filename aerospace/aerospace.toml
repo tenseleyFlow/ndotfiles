@@ -238,7 +238,7 @@ ctrl-9 = 'workspace 9'
 
 ctrl-i = 'workspace I'
 ctrl-m = 'workspace M'
-ctrl-z = 'workspace Z'
+# ctrl-z = 'workspace Z'
 
 # == Move node to workspace
 ctrl-shift-0 = 'move-node-to-workspace 0 --focus-follows-window'
@@ -258,7 +258,7 @@ ctrl-shift-m = 'move-node-to-workspace M --focus-follows-window'
 ctrl-shift-s = 'move-node-to-workspace S --focus-follows-window'
 # ctrl-shift-f = 'move-node-to-workspace F --focus-follows-window'
 ctrl-shift-w = 'move-node-to-workspace W --focus-follows-window'
-ctrl-shift-z = 'move-node-to-workspace Z --focus-follows-window'
+# ctrl-shift-z = 'move-node-to-workspace Z --focus-follows-window'
 
 # == Monitor focus
 ctrl-alt-left  = 'focus-monitor prev --wrap-around'

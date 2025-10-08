@@ -20,5 +20,9 @@
     "F12": "command:makeup",
     "F4": "command:jumptag",
     "F5": "command:runit",
-    "F9": "command:makeupbg"
+    "F9": "command:makeupbg",
+    "Alt-Shift-Left": "PreviousTab",
+    "Alt-Shift-Right": "NextTab",
+    "Alt-Shift-Up": "NextSplit",
+    "Alt-Shift-Down": "PreviousSplit"
 }
