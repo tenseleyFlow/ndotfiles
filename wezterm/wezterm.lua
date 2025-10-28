@@ -224,6 +224,14 @@ config.keys = {
     },
   },
 
+  -- this bind causes erratic behavior with multiple panes open
+  {
+      key = 'Z',
+      mods = 'CTRL|SHIFT',
+      action = wezterm.action.DisableDefaultAssignment,
+  },
+
+
   
   -- :::
   -- :::: TABBY-THINGS ::::
