@@ -30,10 +30,10 @@ end
 
 -- <<TUNER-START>>
 -- @ui: slider(min=10, max=42, step=1) type=int
-config.font_size = 18
+config.font_size = 27
 
 -- @ui: select(options="Birds of Paradise,Gotham (terminal.sexy),Grape,Grass,Hardcore (base16),hardhacker,Harmonic16 Dark (base16),Harper (Gogh),HaX0R_BLUE,Heetch Dark (base16),Hemisu Dark (Gogh),Highway,Highway (Gogh),Hivacruz,Hopscotch,Hybrid (Gogh),Ibm 3270 (High Contrast) (Gogh),Ic Orange Ppl (Gogh),IC_Orange_PPL,Ivory Dark (terminal.sexy),Jackie Brown,Japanesque,JetBrains Darcula,jmbi (terminal.sexy)") type=string
-config.color_scheme = "jmbi (terminal.sexy)"
+config.color_scheme = "JetBrains Darcula"
 
 -- @ui: select(options="JetBrains Mono, Fira Code, Cascadia Code, Source Code Pro, Hack, Consolas, Monaco, Menlo, DejaVu Sans Mono, Ubuntu Mono, Roboto Mono, IBM Plex Mono, Inconsolata") type=string
 config.font = wezterm.font("JetBrains Mono")
@@ -45,10 +45,10 @@ config.line_height = 1.29
 config.cell_width = 1.0
 
 -- @ui: slider(min=0.05, max=1.0, step=0.01) type=float
-config.window_background_opacity = 1.0
+config.window_background_opacity = 0.26
 
 -- @ui: slider(min=1, max=100, step=1) type=int
-config.macos_window_background_blur = 100
+config.macos_window_background_blur = 22
 
 -- @ui: color_picker(format="hex", alpha=false) type=color
 config.colors = config.colors or {}
