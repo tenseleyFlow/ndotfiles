@@ -309,12 +309,12 @@ config.keys = {
   {
     key = "\\",
     mods = "CMD",
-    action = wezterm.action.SplitHorizontal { domain = "CurrentPaneDomain" },
+    action = wezterm.action.SplitVertical { domain = "CurrentPaneDomain" },
   },
   {
     key = "\\",
     mods = "CMD|SHIFT",
-    action = wezterm.action.SplitVertical { domain = "CurrentPaneDomain" },
+    action = wezterm.action.SplitHorizontal { domain = "CurrentPaneDomain" },
   },
 
   -- navigation..

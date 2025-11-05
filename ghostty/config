@@ -29,8 +29,8 @@ keybind = ctrl+shift+tab=previous_tab
 
 # ===== PANE/SPLIT MANAGEMENT =====
 # Create splits
-keybind = super+backslash=new_split:down
-keybind = super+shift+backslash=new_split:right
+keybind = super+backslash=new_split:right
+keybind = super+shift+backslash=new_split:down
 keybind = ctrl+shift+x=close_surface
 
 # Navigate panes
