@@ -207,6 +207,7 @@ alt-p = 'mode monitor'
 
 
 cmd-enter = 'exec-and-forget wezterm start'
+cmd-alt-enter = 'exec-and-forget open -n -a iTerm'
 cmd-shift-enter = 'exec-and-forget open -na Ghostty'
 
 
