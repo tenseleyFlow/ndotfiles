@@ -33,7 +33,7 @@ end
 config.font_size = 27
 
 -- @ui: select(options="Birds of Paradise,Gotham (terminal.sexy),Grape,Grass,Hardcore (base16),hardhacker,Harmonic16 Dark (base16),Harper (Gogh),HaX0R_BLUE,Heetch Dark (base16),Hemisu Dark (Gogh),Highway,Highway (Gogh),Hivacruz,Hopscotch,Hybrid (Gogh),Ibm 3270 (High Contrast) (Gogh),Ic Orange Ppl (Gogh),IC_Orange_PPL,Ivory Dark (terminal.sexy),Jackie Brown,Japanesque,JetBrains Darcula,jmbi (terminal.sexy)") type=string
-config.color_scheme = "JetBrains Darcula"
+config.color_scheme = "Hardcore (base16)"
 
 -- @ui: select(options="JetBrains Mono, Fira Code, Cascadia Code, Source Code Pro, Hack, Consolas, Monaco, Menlo, DejaVu Sans Mono, Ubuntu Mono, Roboto Mono, IBM Plex Mono, Inconsolata") type=string
 config.font = wezterm.font("JetBrains Mono")
@@ -309,12 +309,12 @@ config.keys = {
   {
     key = "\\",
     mods = "CMD",
-    action = wezterm.action.SplitVertical { domain = "CurrentPaneDomain" },
+    action = wezterm.action.SplitHorizontal { domain = "CurrentPaneDomain" },
   },
   {
     key = "\\",
     mods = "CMD|SHIFT",
-    action = wezterm.action.SplitHorizontal { domain = "CurrentPaneDomain" },
+    action = wezterm.action.SplitVertical { domain = "CurrentPaneDomain" },
   },
 
   -- navigation..
