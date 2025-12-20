@@ -85,9 +85,10 @@ sync_repo() {
             ((total_skipped++)) || true
         fi
     else
-        # Clone new repo with timeout, showing progress
-        log_info "Cloning $repo..."
-        if timeout "$CLONE_TIMEOUT" gh repo clone "${github_org}/${repo}" "$repo_path" -- --progress 2>&1; then
+        # Clone new repo via SSH with timeout, showing progress
+        local ssh_url="git@github.com:${github_org}/${repo}.git"
+        log_info "Cloning $repo (SSH)..."
+        if timeout "$CLONE_TIMEOUT" git clone --progress "$ssh_url" "$repo_path" 2>&1; then
             if [[ -d "$repo_path/.git" ]]; then
                 log_success "$repo (cloned)"
                 ((total_cloned++)) || true
