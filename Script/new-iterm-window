@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Required parameters:
+# @raycast.schemaVersion 1
+# @raycast.title New iTerm Window
+# @raycast.mode silent
+
+# Optional parameters:
+# @raycast.icon 🖥️
+# @raycast.description Spawn a new iTerm2 window
+# @raycast.packageName iTerm2
+
+# Spawn new iTerm2 window
+open -n -a iTerm

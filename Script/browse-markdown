@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# Required parameters:
+# @raycast.schemaVersion 1
+# @raycast.title Browse Markdown Files
+# @raycast.mode silent
+
+# Optional parameters:
+# @raycast.icon 📝
+# @raycast.description Browse ndotfiles notes and view micro keybinds
+# @raycast.packageName Markdown Browser
+# @raycast.argument1 { "type": "text", "placeholder": "Directory (optional)", "optional": true }
+
+# Get the script's directory to find ndotfiles root
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+NDOTFILES_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# Set directory to search (default to ndotfiles/notes or argument)
+SEARCH_DIR="${1:-$NDOTFILES_ROOT/notes}"
+
+# Check if directory exists
+if [ ! -d "$SEARCH_DIR" ]; then
+  echo "Error: Directory '$SEARCH_DIR' does not exist"
+  exit 1
+fi
+
+# Launch fzf markdown browser in a floating Ghostty window
+open -na Ghostty --args -e bash -c "
+  cd '$SEARCH_DIR' && \
+  fd -e md -e markdown | \
+  fzf --preview 'bat --color=always --style=numbers {}' \
+      --preview-window=right:60% \
+      --bind 'enter:execute(open {})+abort' \
+      --header 'Enter: Open | Esc: Cancel'
+"

@@ -123,21 +123,25 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 [gaps]
 outer.top    = [{ monitor.main         = 6 },
                 { monitor."LU28R55"     = 48 },
+                { monitor."LC34G55T"     = 48 },
                 { monitor."Odyssey*"     = 48 },
                 { monitor."HP*" = 48 },
                 12]
 outer.left   = [{ monitor.main         = 12 },
                 { monitor."LU28R55"     = 12 },
+                { monitor."LC34G55T"     = 12 },
                 { monitor."Odyssey*"     = 12 },
                 { monitor."HP*" = 12 },
                 12]
 outer.bottom = [{ monitor.main         = 12 },
                 { monitor."LU28R55"     = 12 },
+                { monitor."LC34G55T"     = 12 },
                 { monitor."Odyssey*"     = 12 },
                 { monitor."HP*" = 12 },
                 12]
 outer.right  = [{ monitor.main         = 12 },
                 { monitor."LU28R55"     = 12 },
+                { monitor."LC34G55T"     = 12 },
                 { monitor."Odyssey*"     = 12 },
                 { monitor."HP*" = 12 },
                 12]
@@ -203,6 +207,7 @@ alt-p = 'mode monitor'
 
 
 cmd-enter = 'exec-and-forget wezterm start'
+cmd-alt-enter = 'exec-and-forget open -n -a iTerm'
 cmd-shift-enter = 'exec-and-forget open -na Ghostty'
 
 
@@ -234,7 +239,7 @@ ctrl-9 = 'workspace 9'
 
 ctrl-i = 'workspace I'
 ctrl-m = 'workspace M'
-ctrl-z = 'workspace Z'
+# ctrl-z = 'workspace Z'
 
 # == Move node to workspace
 ctrl-shift-0 = 'move-node-to-workspace 0 --focus-follows-window'
@@ -251,10 +256,10 @@ ctrl-shift-9 = 'move-node-to-workspace 9 --focus-follows-window'
 ctrl-shift-i = 'move-node-to-workspace I --focus-follows-window'
 # ctrl-shift-g = 'move-node-to-workspace G --focus-follows-window'
 ctrl-shift-m = 'move-node-to-workspace M --focus-follows-window'
-ctrl-shift-s = 'move-node-to-workspace S --focus-follows-window'
+# ctrl-shift-s = 'move-node-to-workspace S --focus-follows-window'
 # ctrl-shift-f = 'move-node-to-workspace F --focus-follows-window'
 ctrl-shift-w = 'move-node-to-workspace W --focus-follows-window'
-ctrl-shift-z = 'move-node-to-workspace Z --focus-follows-window'
+# ctrl-shift-z = 'move-node-to-workspace Z --focus-follows-window'
 
 # == Monitor focus
 ctrl-alt-left  = 'focus-monitor prev --wrap-around'
