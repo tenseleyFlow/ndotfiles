@@ -56,62 +56,101 @@ sync_repo() {
     local org_path="$3"
     local repo_path="${org_path}/${repo}"
 
-    if [[ -d "$repo_path" ]]; then
-        # Repo exists - try to pull
-        if [[ -d "$repo_path/.git" ]]; then
-            cd "$repo_path"
+    # Case 1: Valid git repo exists - try to update
+    if [[ -d "$repo_path/.git" ]]; then
+        # Use subshell to avoid cd pollution, capture result
+        local result
+        result=$(
+            cd "$repo_path" 2>/dev/null || { echo "invalid"; exit 0; }
 
-            # Check for uncommitted changes
-            if ! git diff-index --quiet HEAD -- 2>/dev/null; then
-                log_warn "$repo (uncommitted changes, skipping)"
-                ((total_skipped++)) || true
-                return 0
+            # Verify it's a valid git repo with a HEAD
+            if ! git rev-parse HEAD &>/dev/null; then
+                echo "invalid"
+                exit 0
+            fi
+
+            # Check for uncommitted changes (staged or unstaged)
+            if ! git diff --quiet 2>/dev/null || ! git diff --cached --quiet 2>/dev/null; then
+                echo "dirty"
+                exit 0
             fi
 
             # Try fast-forward pull
-            if output=$(timeout 30 git pull --ff-only 2>&1); then
-                if [[ "$output" == *"Already up to date"* ]]; then
-                    log_success "$repo (up to date)"
+            if pull_output=$(timeout 30 git pull --ff-only 2>&1); then
+                if [[ "$pull_output" == *"Already up to date"* ]]; then
+                    echo "uptodate"
                 else
-                    log_success "$repo (updated)"
-                    ((total_updated++)) || true
+                    echo "updated"
                 fi
             else
+                echo "diverged"
+            fi
+        )
+
+        case "$result" in
+            invalid)
+                log_warn "$repo (invalid git repo, skipping)"
+                ((total_skipped++)) || true
+                ;;
+            dirty)
+                log_warn "$repo (uncommitted changes, skipping)"
+                ((total_skipped++)) || true
+                ;;
+            uptodate)
+                log_success "$repo (up to date)"
+                ;;
+            updated)
+                log_success "$repo (updated)"
+                ((total_updated++)) || true
+                ;;
+            diverged)
                 log_warn "$repo (can't fast-forward, skipping)"
                 ((total_skipped++)) || true
-            fi
+                ;;
+            *)
+                log_warn "$repo (unknown state: $result)"
+                ((total_skipped++)) || true
+                ;;
+        esac
+        return 0
+
+    # Case 2: Directory exists but no .git
+    elif [[ -d "$repo_path" ]]; then
+        if [[ -z "$(ls -A "$repo_path" 2>/dev/null)" ]]; then
+            log_info "$repo (empty dir, removing and cloning...)"
+            rmdir "$repo_path"
         else
             log_warn "$repo (exists but not a git repo)"
             ((total_skipped++)) || true
+            return 0
+        fi
+    fi
+
+    # Case 3: Clone new repo
+    local ssh_url="git@github.com:${github_org}/${repo}.git"
+    log_info "Cloning $repo (SSH)..."
+    if timeout "$CLONE_TIMEOUT" git clone --progress "$ssh_url" "$repo_path" 2>&1; then
+        if [[ -d "$repo_path/.git" ]]; then
+            log_success "$repo (cloned)"
+            ((total_cloned++)) || true
+        else
+            log_error "$repo (clone failed - no permission?)"
+            failed_repos+=("${github_org}/${repo}")
+            ((total_failed++)) || true
         fi
     else
-        # Clone new repo via SSH with timeout, showing progress
-        local ssh_url="git@github.com:${github_org}/${repo}.git"
-        log_info "Cloning $repo (SSH)..."
-        if timeout "$CLONE_TIMEOUT" git clone --progress "$ssh_url" "$repo_path" 2>&1; then
-            if [[ -d "$repo_path/.git" ]]; then
-                log_success "$repo (cloned)"
-                ((total_cloned++)) || true
-            else
-                log_error "$repo (clone failed - no permission?)"
-                failed_repos+=("${github_org}/${repo}")
-                ((total_failed++)) || true
-            fi
+        local exit_code=$?
+        if [[ -d "$repo_path/.git" ]]; then
+            log_success "$repo (cloned)"
+            ((total_cloned++)) || true
+        elif [[ $exit_code -eq 124 ]]; then
+            log_error "$repo (timeout after ${CLONE_TIMEOUT}s)"
+            failed_repos+=("${github_org}/${repo}")
+            ((total_failed++)) || true
         else
-            exit_code=$?
-            # Check if it actually succeeded despite error
-            if [[ -d "$repo_path/.git" ]]; then
-                log_success "$repo (cloned)"
-                ((total_cloned++)) || true
-            elif [[ $exit_code -eq 124 ]]; then
-                log_error "$repo (timeout after ${CLONE_TIMEOUT}s)"
-                failed_repos+=("${github_org}/${repo}")
-                ((total_failed++)) || true
-            else
-                log_error "$repo (clone failed)"
-                failed_repos+=("${github_org}/${repo}")
-                ((total_failed++)) || true
-            fi
+            log_error "$repo (clone failed)"
+            failed_repos+=("${github_org}/${repo}")
+            ((total_failed++)) || true
         fi
     fi
 }
