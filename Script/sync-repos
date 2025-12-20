@@ -1,0 +1,231 @@
+#!/usr/bin/env bash
+#
+# sync-repos - Sync all GitHub organizations and their repos locally
+#
+# Clones new repos and pulls updates (ff-only) for existing ones.
+# Config: ~/.config/sync-repos/orgs.conf
+#
+
+set -uo pipefail
+
+CONFIG_FILE="${SYNC_REPOS_CONFIG:-$HOME/.config/sync-repos/orgs.conf}"
+GITHUB_ORGS_DIR="${GITHUB_ORGS_DIR:-$HOME/GithubOrgs}"
+CLONE_TIMEOUT="${CLONE_TIMEOUT:-300}"  # seconds (5 min for large repos)
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+BOLD='\033[1m'
+NC='\033[0m'
+
+# Counters
+total_cloned=0
+total_updated=0
+total_skipped=0
+total_failed=0
+declare -a failed_repos=()
+
+log_info()    { echo -e "${BLUE}→${NC} $*"; }
+log_success() { echo -e "${GREEN}✓${NC} $*"; }
+log_warn()    { echo -e "${YELLOW}⚠${NC} $*"; }
+log_error()   { echo -e "${RED}✗${NC} $*"; }
+log_header()  { echo -e "\n${BOLD}${BLUE}══════════════════════════════════════${NC}"; echo -e "${BOLD}  $*${NC}"; echo -e "${BOLD}${BLUE}══════════════════════════════════════${NC}"; }
+
+check_requirements() {
+    if ! command -v gh &> /dev/null; then
+        log_error "gh CLI is not installed. Install from: https://cli.github.com/"
+        exit 1
+    fi
+
+    if ! gh auth status &> /dev/null; then
+        log_error "Not authenticated with GitHub. Run: gh auth login"
+        exit 1
+    fi
+
+    if [[ ! -f "$CONFIG_FILE" ]]; then
+        log_error "Config file not found: $CONFIG_FILE"
+        exit 1
+    fi
+}
+
+sync_repo() {
+    local github_org="$1"
+    local repo="$2"
+    local org_path="$3"
+    local repo_path="${org_path}/${repo}"
+
+    if [[ -d "$repo_path" ]]; then
+        # Repo exists - try to pull
+        if [[ -d "$repo_path/.git" ]]; then
+            cd "$repo_path"
+
+            # Check for uncommitted changes
+            if ! git diff-index --quiet HEAD -- 2>/dev/null; then
+                log_warn "$repo (uncommitted changes, skipping)"
+                ((total_skipped++)) || true
+                return 0
+            fi
+
+            # Try fast-forward pull
+            if output=$(timeout 30 git pull --ff-only 2>&1); then
+                if [[ "$output" == *"Already up to date"* ]]; then
+                    log_success "$repo (up to date)"
+                else
+                    log_success "$repo (updated)"
+                    ((total_updated++)) || true
+                fi
+            else
+                log_warn "$repo (can't fast-forward, skipping)"
+                ((total_skipped++)) || true
+            fi
+        else
+            log_warn "$repo (exists but not a git repo)"
+            ((total_skipped++)) || true
+        fi
+    else
+        # Clone new repo with timeout, showing progress
+        log_info "Cloning $repo..."
+        if timeout "$CLONE_TIMEOUT" gh repo clone "${github_org}/${repo}" "$repo_path" -- --progress 2>&1; then
+            if [[ -d "$repo_path/.git" ]]; then
+                log_success "$repo (cloned)"
+                ((total_cloned++)) || true
+            else
+                log_error "$repo (clone failed - no permission?)"
+                failed_repos+=("${github_org}/${repo}")
+                ((total_failed++)) || true
+            fi
+        else
+            exit_code=$?
+            # Check if it actually succeeded despite error
+            if [[ -d "$repo_path/.git" ]]; then
+                log_success "$repo (cloned)"
+                ((total_cloned++)) || true
+            elif [[ $exit_code -eq 124 ]]; then
+                log_error "$repo (timeout after ${CLONE_TIMEOUT}s)"
+                failed_repos+=("${github_org}/${repo}")
+                ((total_failed++)) || true
+            else
+                log_error "$repo (clone failed)"
+                failed_repos+=("${github_org}/${repo}")
+                ((total_failed++)) || true
+            fi
+        fi
+    fi
+}
+
+sync_org() {
+    local local_dir="$1"
+    local org_spec="$2"
+    local org_path="${GITHUB_ORGS_DIR}/${local_dir}"
+
+    # Parse org:repo1,repo2 format
+    local github_org specific_repos
+    if [[ "$org_spec" == *:* ]]; then
+        github_org="${org_spec%%:*}"
+        specific_repos="${org_spec#*:}"
+    else
+        github_org="$org_spec"
+        specific_repos=""
+    fi
+
+    log_header "$local_dir ← $github_org"
+
+    # Create org directory if needed
+    if [[ ! -d "$org_path" ]]; then
+        log_info "Creating directory: $org_path"
+        mkdir -p "$org_path"
+    fi
+
+    local repos
+    if [[ -n "$specific_repos" ]]; then
+        # Use specific repos from config
+        repos=$(echo "$specific_repos" | tr ',' '\n')
+        local repo_count
+        repo_count=$(echo "$repos" | wc -l)
+        log_info "Syncing $repo_count specific repositories"
+    else
+        # Fetch all repos from GitHub
+        log_info "Fetching repository list..."
+        if ! repos=$(gh repo list "$github_org" --limit 1000 --json name --jq '.[].name' 2>&1); then
+            log_error "Failed to list repos for $github_org: $repos"
+            return 1
+        fi
+
+        if [[ -z "$repos" ]]; then
+            log_warn "No repositories found for $github_org"
+            return 0
+        fi
+
+        local repo_count
+        repo_count=$(echo "$repos" | wc -l)
+        log_info "Found $repo_count repositories"
+    fi
+    echo ""
+
+    local cloned=0 updated=0 skipped=0 failed=0
+    local before_cloned=$total_cloned
+    local before_updated=$total_updated
+    local before_skipped=$total_skipped
+    local before_failed=$total_failed
+
+    while IFS= read -r repo; do
+        [[ -z "$repo" ]] && continue
+        sync_repo "$github_org" "$repo" "$org_path"
+    done <<< "$repos"
+
+    cloned=$((total_cloned - before_cloned))
+    updated=$((total_updated - before_updated))
+    skipped=$((total_skipped - before_skipped))
+    failed=$((total_failed - before_failed))
+
+    echo ""
+    echo "  Cloned: $cloned | Updated: $updated | Skipped: $skipped | Failed: $failed"
+}
+
+main() {
+    echo -e "${BOLD}${BLUE}"
+    echo "  ╔═══════════════════════════════════╗"
+    echo "  ║       GitHub Repos Sync           ║"
+    echo "  ╚═══════════════════════════════════╝"
+    echo -e "${NC}"
+
+    check_requirements
+
+    log_info "Config: $CONFIG_FILE"
+    log_info "Target: $GITHUB_ORGS_DIR"
+
+    # Create base directory if needed
+    mkdir -p "$GITHUB_ORGS_DIR"
+
+    # Read config and sync each org
+    while IFS='=' read -r local_dir org_spec || [[ -n "$local_dir" ]]; do
+        # Skip comments and empty lines
+        [[ -z "$local_dir" || "$local_dir" =~ ^[[:space:]]*# ]] && continue
+
+        # Trim whitespace
+        local_dir="${local_dir// /}"
+        org_spec="${org_spec// /}"
+
+        sync_org "$local_dir" "$org_spec"
+    done < "$CONFIG_FILE"
+
+    # Summary
+    log_header "Sync Complete"
+    echo ""
+    echo -e "  ${GREEN}Cloned:${NC}  $total_cloned"
+    echo -e "  ${BLUE}Updated:${NC} $total_updated"
+    echo -e "  ${YELLOW}Skipped:${NC} $total_skipped"
+    echo -e "  ${RED}Failed:${NC}  $total_failed"
+    echo ""
+
+    if [[ ${#failed_repos[@]} -gt 0 ]]; then
+        log_error "Failed repositories:"
+        for repo in "${failed_repos[@]}"; do
+            echo "    - $repo"
+        done
+    fi
+}
+
+main "$@"
