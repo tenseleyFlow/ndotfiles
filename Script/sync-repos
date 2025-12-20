@@ -126,32 +126,59 @@ sync_repo() {
         fi
     fi
 
-    # Case 3: Clone new repo
+    # Case 3: Clone new repo with retry logic
     local ssh_url="git@github.com:${github_org}/${repo}.git"
-    log_info "Cloning $repo (SSH)..."
-    if timeout "$CLONE_TIMEOUT" git clone --progress "$ssh_url" "$repo_path" 2>&1; then
-        if [[ -d "$repo_path/.git" ]]; then
-            log_success "$repo (cloned)"
-            ((total_cloned++)) || true
+    local max_retries=3
+    local attempt=1
+    local clone_success=false
+
+    while [[ $attempt -le $max_retries ]] && [[ "$clone_success" == "false" ]]; do
+        # Clean up any partial clone
+        [[ -d "$repo_path" ]] && rm -rf "$repo_path"
+
+        if [[ $attempt -eq 1 ]]; then
+            log_info "Cloning $repo (SSH)..."
         else
-            log_error "$repo (clone failed - no permission?)"
-            failed_repos+=("${github_org}/${repo}")
-            ((total_failed++)) || true
+            log_info "Cloning $repo (retry $attempt/$max_retries)..."
         fi
-    else
-        local exit_code=$?
-        if [[ -d "$repo_path/.git" ]]; then
-            log_success "$repo (cloned)"
-            ((total_cloned++)) || true
-        elif [[ $exit_code -eq 124 ]]; then
-            log_error "$repo (timeout after ${CLONE_TIMEOUT}s)"
-            failed_repos+=("${github_org}/${repo}")
-            ((total_failed++)) || true
+
+        # Try full clone first, then shallow on final attempt
+        local clone_args="--progress"
+        if [[ $attempt -eq $max_retries ]]; then
+            clone_args="--progress --depth 1"
+            log_info "(trying shallow clone...)"
+        fi
+
+        if timeout "$CLONE_TIMEOUT" git clone $clone_args "$ssh_url" "$repo_path" 2>&1; then
+            if [[ -d "$repo_path/.git" ]]; then
+                if [[ $attempt -eq $max_retries ]]; then
+                    log_success "$repo (cloned shallow)"
+                else
+                    log_success "$repo (cloned)"
+                fi
+                ((total_cloned++)) || true
+                clone_success=true
+            fi
         else
-            log_error "$repo (clone failed)"
-            failed_repos+=("${github_org}/${repo}")
-            ((total_failed++)) || true
+            local exit_code=$?
+            if [[ -d "$repo_path/.git" ]]; then
+                log_success "$repo (cloned)"
+                ((total_cloned++)) || true
+                clone_success=true
+            elif [[ $exit_code -eq 124 ]]; then
+                log_warn "$repo (attempt $attempt timed out)"
+            else
+                log_warn "$repo (attempt $attempt failed)"
+            fi
         fi
+
+        ((attempt++)) || true
+    done
+
+    if [[ "$clone_success" == "false" ]]; then
+        log_error "$repo (clone failed after $max_retries attempts)"
+        failed_repos+=("${github_org}/${repo}")
+        ((total_failed++)) || true
     fi
 }
 
