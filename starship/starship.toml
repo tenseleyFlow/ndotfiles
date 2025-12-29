@@ -1,0 +1,36 @@
+add_newline = true
+
+[character]
+error_symbol = "[❯](bold red)"
+success_symbol = "[❯](bold green)"
+
+[cmd_duration]
+min_time = 2000
+style = "bold yellow"
+
+[directory]
+style = "bold cyan"
+truncate_to_repo = true
+truncation_length = 3
+
+[git_branch]
+style = "bold purple"
+symbol = " "
+
+[git_status]
+style = "bold red"
+
+[golang]
+symbol = " "
+
+[nix_shell]
+symbol = " "
+
+[nodejs]
+symbol = " "
+
+[python]
+symbol = " "
+
+[rust]
+symbol = " "
