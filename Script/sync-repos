@@ -50,6 +50,27 @@ check_requirements() {
     fi
 }
 
+sync_submodules() {
+    local repo_path="$1"
+    local repo="$2"
+
+    [[ -f "$repo_path/.gitmodules" ]] || return 0
+
+    (
+        cd "$repo_path" 2>/dev/null || exit 0
+        # Prefix `-` = uninitialized, `+` = checked-out commit differs from index.
+        # Either means `submodule update --init --recursive` has work to do.
+        if git submodule status --recursive 2>/dev/null | grep -qE '^[-+]'; then
+            log_info "  $repo: syncing submodules..."
+            if timeout "$CLONE_TIMEOUT" git submodule update --init --recursive 2>&1 >/dev/null; then
+                log_success "  $repo: submodules initialized"
+            else
+                log_warn "  $repo: submodule update failed"
+            fi
+        fi
+    )
+}
+
 sync_repo() {
     local github_org="$1"
     local repo="$2"
@@ -98,10 +119,12 @@ sync_repo() {
                 ;;
             uptodate)
                 log_success "$repo (up to date)"
+                sync_submodules "$repo_path" "$repo"
                 ;;
             updated)
                 log_success "$repo (updated)"
                 ((total_updated++)) || true
+                sync_submodules "$repo_path" "$repo"
                 ;;
             diverged)
                 log_warn "$repo (can't fast-forward, skipping)"
@@ -158,6 +181,7 @@ sync_repo() {
                 fi
                 ((total_cloned++)) || true
                 clone_success=true
+                sync_submodules "$repo_path" "$repo"
             fi
         else
             local exit_code=$?
@@ -165,6 +189,7 @@ sync_repo() {
                 log_success "$repo (cloned)"
                 ((total_cloned++)) || true
                 clone_success=true
+                sync_submodules "$repo_path" "$repo"
             elif [[ $exit_code -eq 124 ]]; then
                 log_warn "$repo (attempt $attempt timed out)"
             else
