@@ -1,36 +1,19 @@
-add_newline = true
+format = """
+$username$hostname :: $directory$all\
+$line_break\
+$character"""
 
-[character]
-error_symbol = "[❯](bold red)"
-success_symbol = "[❯](bold green)"
+[username]
+show_always = true
+format = "[$user](bold blue)"
 
-[cmd_duration]
-min_time = 2000
-style = "bold yellow"
+[hostname]
+ssh_only = false
+format = "[@$hostname](bold blue)"
 
 [directory]
-style = "bold cyan"
-truncate_to_repo = true
-truncation_length = 3
+format = "[$path](bold cyan)[$read_only](red) "
 
-[git_branch]
-style = "bold purple"
-symbol = " "
-
-[git_status]
-style = "bold red"
-
-[golang]
-symbol = " "
-
-[nix_shell]
-symbol = " "
-
-[nodejs]
-symbol = " "
-
-[python]
-symbol = " "
-
-[rust]
-symbol = " "
+[character]
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
