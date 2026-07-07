@@ -11,6 +11,9 @@ set -uo pipefail
 CONFIG_FILE="${SYNC_REPOS_CONFIG:-$HOME/.config/sync-repos/orgs.conf}"
 GITHUB_ORGS_DIR="${GITHUB_ORGS_DIR:-$HOME/GithubOrgs}"
 CLONE_TIMEOUT="${CLONE_TIMEOUT:-300}"  # seconds (5 min for large repos)
+# Clone protocol: honor SYNC_REPOS_PROTOCOL, else gh's configured git_protocol,
+# else https. Use https unless you have SSH keys registered with GitHub.
+GIT_PROTOCOL="${SYNC_REPOS_PROTOCOL:-$(gh config get git_protocol 2>/dev/null || echo https)}"
 
 # Colors
 RED='\033[0;31m'
@@ -150,7 +153,14 @@ sync_repo() {
     fi
 
     # Case 3: Clone new repo with retry logic
-    local ssh_url="git@github.com:${github_org}/${repo}.git"
+    local clone_url proto_label
+    if [[ "$GIT_PROTOCOL" == "ssh" ]]; then
+        clone_url="git@github.com:${github_org}/${repo}.git"
+        proto_label="SSH"
+    else
+        clone_url="https://github.com/${github_org}/${repo}.git"
+        proto_label="HTTPS"
+    fi
     local max_retries=3
     local attempt=1
     local clone_success=false
@@ -160,7 +170,7 @@ sync_repo() {
         [[ -d "$repo_path" ]] && rm -rf "$repo_path"
 
         if [[ $attempt -eq 1 ]]; then
-            log_info "Cloning $repo (SSH)..."
+            log_info "Cloning $repo ($proto_label)..."
         else
             log_info "Cloning $repo (retry $attempt/$max_retries)..."
         fi
@@ -172,7 +182,7 @@ sync_repo() {
             log_info "(trying shallow clone...)"
         fi
 
-        if timeout "$CLONE_TIMEOUT" git clone $clone_args "$ssh_url" "$repo_path" 2>&1; then
+        if timeout "$CLONE_TIMEOUT" git clone $clone_args "$clone_url" "$repo_path" 2>&1; then
             if [[ -d "$repo_path/.git" ]]; then
                 if [[ $attempt -eq $max_retries ]]; then
                     log_success "$repo (cloned shallow)"
