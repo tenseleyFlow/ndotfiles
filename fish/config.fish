@@ -1,4 +1,4 @@
-source /usr/share/cachyos-fish-config/cachyos-config.fish
+# source /usr/share/cachyos-fish-config/cachyos-config.fish
 
 # overwrite greeting
 # potentially disabling fastfetch
@@ -37,3 +37,6 @@ if status is-interactive
     and type -q herdr
     exec herdr --session remote
 end
+
+# Starship prompt
+starship init fish | source
