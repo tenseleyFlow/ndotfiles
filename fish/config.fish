@@ -1,4 +1,19 @@
-# source /usr/share/cachyos-fish-config/cachyos-config.fish
+source /usr/share/cachyos-fish-config/cachyos-config.fish
+
+# liszt over the distro's eza aliases: byte-identical GNU ls when the
+# flags come off, nord theme matching the alacritty palette. --theme
+# implies full metadata coloring, so --color=always is redundant.
+# complete -e first: the distro aliases register eza completion wraps
+# that survive function redefinition and would merge eza's flags into
+# tab completion.
+for cmd in ls la ll lt
+    complete -c $cmd -e
+    functions -e $cmd
+end
+alias ls='liszt --theme=nord -al --group-directories-first --icons=always'
+alias la='liszt --theme=nord -a --group-directories-first --icons=always'
+alias ll='liszt --theme=nord -l --group-directories-first --icons=always'
+alias lt='liszt --theme=nord -a --tree --group-directories-first --icons=always'
 
 # overwrite greeting
 # potentially disabling fastfetch
@@ -37,6 +52,3 @@ if status is-interactive
     and type -q herdr
     exec herdr --session remote
 end
-
-# Starship prompt
-starship init fish | source
